@@ -1,3 +1,6 @@
 <resources>
-    <string name="app_name">TheMovieApp</string>
+    <string name="app_name">The  Movies  App</string>
+    <string name="app_slogan">Recommendings whats you like..</string>
+    <string name="powered_by">Powered by TMDB\n © Copyright reserved 2025</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
