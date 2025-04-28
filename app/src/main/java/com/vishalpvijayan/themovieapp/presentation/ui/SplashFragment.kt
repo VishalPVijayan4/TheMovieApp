@@ -1,4 +1,4 @@
-package com.vishalpvijayan.themovieapp.ui
+package com.vishalpvijayan.themovieapp.presentation.ui
 
 import android.annotation.SuppressLint
 import android.os.Bundle
@@ -19,7 +19,8 @@ class SplashFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         Handler(Looper.getMainLooper()).postDelayed({
-            val action = SplashFragmentDirections.actionSplashScreenToDashboardScreen()
+//            val action = SplashFragmentDirections.actionSplashScreenToDashboardScreen()
+            val action = SplashFragmentDirections.actionSplashScreenToUserListFragment()
             findNavController().navigate(action)
         }, 2000)
         return inflater.inflate(R.layout.fragment_splash, container, false)
