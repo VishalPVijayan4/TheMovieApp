@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "490849604524",
+    "project_id": "themovieapp-e14d1",
+    "storage_bucket": "themovieapp-e14d1.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:490849604524:android:97db8c26cf0df34c062009",
+        "android_client_info": {
+          "package_name": "com.vishalpvijayan.themovieapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDLjXyil-J6ebWxhjO_gdWuJ4ZenGRZWkQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

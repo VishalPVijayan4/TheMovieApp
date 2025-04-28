@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+    <navigation xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/nav_graph"
+        app:startDestination="@id/splashScreen">
+
+    <fragment
+        android:id="@+id/splashScreen"
+        android:name="com.vishalpvijayan.themovieapp.presentation.ui.SplashFragment"
+        android:label="fragment_splash_screen"
+        tools:layout="@layout/fragment_splash" >
+
+        <action
+            android:id="@+id/action_splashScreen_to_dashboardScreen"
+            app:destination="@id/dashboardScreen" />
+        <action
+            android:id="@+id/action_splashScreen_to_userListFragment"
+            app:destination="@id/userListFragment" />
+    </fragment>
+
+
+    <fragment
+        android:id="@+id/dashboardScreen"
+        android:name="com.vishalpvijayan.themovieapp.presentation.ui.DashboardFragment"
+        android:label="fragment_dashboard_screen"
+        tools:layout="@layout/fragment_dashboard" >
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/userListFragment"
+        android:name="com.vishalpvijayan.themovieapp.presentation.ui.fragment.UserListFragment"
+        android:label="fragment_dashboard_screen"
+        tools:layout="@layout/fragment_user_list" >
+
+        <action
+            android:id="@+id/action_userListFragment_to_addUserFragment"
+            app:destination="@id/addUserFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/addUserFragment"
+        android:name="com.vishalpvijayan.themovieapp.presentation.ui.fragment.AddUserFragment"
+        android:label="fragment_add_user"
+        tools:layout="@layout/fragment_add_user" >
+
+    </fragment>
+
+
+
+</navigation>

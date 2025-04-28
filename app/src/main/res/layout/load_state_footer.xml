@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center">
+
+        <!-- Progress Bar for loading state -->
+        <ProgressBar
+            android:id="@+id/progress_bar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone" />
+
+        <!-- Text for error message -->
+        <TextView
+            android:id="@+id/error_msg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:text="An error occurred"
+            android:textColor="@android:color/holo_red_dark" />
+
+        <!-- Retry Button -->
+        <Button
+            android:id="@+id/retry_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Retry"
+            android:visibility="gone" />
+    </LinearLayout>
+
+</layout>
+

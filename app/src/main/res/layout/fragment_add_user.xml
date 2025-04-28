@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".presentation.ui.fragment.AddUserFragment">
+
+<androidx.constraintlayout.widget.ConstraintLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- Name EditText -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/inputNameLayout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/inputName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Name"
+            android:importantForAccessibility="yes"
+            android:inputType="textPersonName"
+            android:maxLines="1" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!-- Job Title EditText -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/inputJobLayout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/inputNameLayout">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/inputJob"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Job Title"
+            android:importantForAccessibility="yes"
+            android:inputType="text"
+            android:maxLines="1" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!-- Submit Button -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnSubmit"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:onClick="onSubmitClicked"
+        android:text="Submit"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/inputJobLayout" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
