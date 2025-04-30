@@ -42,6 +42,10 @@ class UserListFragment : Fragment(R.layout.fragment_user_list) {
             findNavController().navigate(R.id.action_userListFragment_to_addUserFragment)
         }
 
+        binding.fabAddUser.setOnClickListener {
+            findNavController().navigate(R.id.action_userListFragment_to_offlineUserFragment)
+        }
+
         // Collect and submit paging data
         lifecycleScope.launchWhenStarted {
             viewModel.users.collectLatest { pagingData ->

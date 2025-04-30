@@ -32,6 +32,16 @@
             app:layout_constraintEnd_toEndOf="@+id/recyclerView"
             app:layout_constraintTop_toTopOf="@+id/recyclerView" />
 
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fabOfflineUsers"
+            android:layout_width="180dp"
+            android:layout_height="0dp"
+            android:layout_margin="20dp"
+            android:contentDescription="Add User"
+            android:src="@android:drawable/ic_input_add"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/fabAddUser" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
 

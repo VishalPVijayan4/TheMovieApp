@@ -1,6 +1,7 @@
 package com.vishalpvijayan.themovieapp.utils.worker
 
 import android.content.Context
+import android.util.Log
 import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
@@ -19,6 +20,7 @@ class SyncUserWorker @Inject constructor(
 ) : CoroutineWorker(appContext, workerParams) {
 
     override suspend fun doWork(): Result {
+        Log.d("SyncUserWorker", "WorkManager triggered to sync offline users.")
         return try {
             val unsyncedUsers = userDao.getUnsyncedUsers()
 

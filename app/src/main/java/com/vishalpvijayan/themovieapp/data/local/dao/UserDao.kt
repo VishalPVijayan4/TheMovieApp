@@ -39,7 +39,13 @@ interface UserDao {
     @Query("SELECT * FROM users")
     fun getAllUsers(): Flow<List<UserEntity>>
 
+//    @Query("SELECT * FROM users WHERE isSynced = 0")
+//    suspend fun getUnsyncedUsers(): List<UserEntity>
+
     @Query("SELECT * FROM users WHERE isSynced = 0")
-    suspend fun getUnsyncedUsers(): List<UserEntity>
+    fun getUnsyncedUsers(): Flow<List<UserEntity>>
+
+
+
 }
 

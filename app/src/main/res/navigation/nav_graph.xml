@@ -39,6 +39,9 @@
         <action
             android:id="@+id/action_userListFragment_to_addUserFragment"
             app:destination="@id/addUserFragment" />
+        <action
+            android:id="@+id/action_userListFragment_to_offlineUserFragment"
+            app:destination="@id/offlineUserFragment" />
     </fragment>
 
     <fragment
@@ -46,6 +49,16 @@
         android:name="com.vishalpvijayan.themovieapp.presentation.ui.fragment.AddUserFragment"
         android:label="fragment_add_user"
         tools:layout="@layout/fragment_add_user" >
+
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/offlineUserFragment"
+        android:name="com.vishalpvijayan.themovieapp.presentation.ui.fragment.OfflineUsersFragment"
+        android:label="fragment_offline_users"
+        tools:layout="@layout/fragment_offline_users" >
+
 
     </fragment>
 

@@ -1,9 +1,13 @@
 package com.vishalpvijayan.themovieapp.presentation.viewmodel
 
+import android.util.Log
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
+import com.vishalpvijayan.themovieapp.data.local.entity.UserEntity
 import com.vishalpvijayan.themovieapp.domain.model.User
 import com.vishalpvijayan.themovieapp.domain.repository.UserRepository
 import com.vishalpvijayan.themovieapp.domain.usecase.AddUserUseCase
@@ -23,6 +27,24 @@ class UserViewModel @Inject constructor(
     private val userRepository: UserRepository
 ) : ViewModel() {
 
+    private val _unsyncedUsers = MutableLiveData<List<UserEntity>>()
+    val unsyncedUsers: LiveData<List<UserEntity>> = _unsyncedUsers
+
+    fun getUnsyncedUsers() {
+        viewModelScope.launch {
+            userRepository.getOfflineUnsyncedUsers().collect {
+                _unsyncedUsers.value = it
+            }
+        }
+    }
+
+    fun syncSingleUser(user: UserEntity) {
+        viewModelScope.launch {
+            userRepository.syncSingleUser(user)
+            getUnsyncedUsers() // Refresh list
+        }
+    }
+
     // Expose users as a Flow with caching
     val users: Flow<PagingData<User>> = userRepository.getUsers()
         .cachedIn(viewModelScope)
@@ -30,6 +52,7 @@ class UserViewModel @Inject constructor(
     fun addUser(name: String, job: String) {
         viewModelScope.launch {
             val user = User(fullName = name, position = job)
+            Log.d("UserViewModel", "Adding user: name=$name, job=$job")
             addUserUseCase(user)
         }
     }
@@ -37,6 +60,7 @@ class UserViewModel @Inject constructor(
     fun syncUsers() {
         viewModelScope.launch {
             userRepository.syncOfflineUsers()
+            Log.d("SyncUserWorker", "Offline users synced successfully.")
         }
     }
 }
