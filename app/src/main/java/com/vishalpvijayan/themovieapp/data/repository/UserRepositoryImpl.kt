@@ -13,7 +13,7 @@ import com.vishalpvijayan.themovieapp.data.remote.datasource.UserRemoteDataSourc
 import com.vishalpvijayan.themovieapp.domain.model.User
 import com.vishalpvijayan.themovieapp.domain.model.toRequest
 import com.vishalpvijayan.themovieapp.domain.repository.UserRepository
-import com.vishalpvijayan.themovieapp.utils.worker.SyncUserWorker
+import com.vishalpvijayan.themovieapp.workers.SyncUserWorker
 import kotlinx.coroutines.flow.Flow
 
 //import android.util.Log
@@ -103,10 +103,6 @@ class UserRepositoryImpl(
             Log.e("UserRepository", "Error syncing single user: ${e.message}")
         }
     }
-
-//    override suspend fun getOfflineUsers(): Flow<List<User>> {
-//        return localDataSource.getUnsyncedUsersFlow()
-//    }
 
     override suspend fun getOfflineUsers(): List<User> {
         return localDataSource.getUnsyncedUsers().map { it }

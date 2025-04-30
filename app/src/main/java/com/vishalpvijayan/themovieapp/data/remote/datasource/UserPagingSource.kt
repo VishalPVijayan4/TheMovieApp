@@ -24,6 +24,5 @@ class UserPagingSource(
     override fun getRefreshKey(state: PagingState<Int, User>): Int? = null
 }
 
-//fun UserDto.toUser() = User(id, firstName, lastName, avatar)
 
 

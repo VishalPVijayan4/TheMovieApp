@@ -1,4 +1,4 @@
-package com.vishalpvijayan.themovieapp.utils.worker
+package com.vishalpvijayan.themovieapp.workers
 
 import android.content.Context
 import android.util.Log
@@ -23,10 +23,9 @@ class SyncUserWorker @Inject constructor(
     override suspend fun doWork(): Result {
         Log.d("SyncUserWorker", "WorkManager triggered to sync offline users.")
         return try {
-//            val unsyncedUsers = userDao.getUnsyncedUsers()
-            val unsyncedUsers = userDao.getUnsyncedUsers().first()
+            val usersOffline = userDao.getUnsyncedUsers().first()
 
-            for (user in unsyncedUsers) {
+            for (user in usersOffline) {
                 val response = apiService.addUser(user.toDomain().toRequest())
 
                 if (response.isSuccessful) {
@@ -37,6 +36,7 @@ class SyncUserWorker @Inject constructor(
 
             Result.success()
         } catch (exception: Exception) {
+            Log.d("Exception while sync",exception.toString())
             Result.retry()
         }
     }

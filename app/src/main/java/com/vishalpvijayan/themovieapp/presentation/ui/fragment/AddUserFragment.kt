@@ -19,13 +19,10 @@ class AddUserFragment : Fragment(R.layout.fragment_add_user) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentAddUserBinding.bind(view)
-        val name = binding.inputName.text.toString().trim()
-        val job = binding.inputJob.text.toString().trim()
         binding.btnSubmit.setOnClickListener {
             val name = binding.inputName.text.toString()
             val job = binding.inputJob.text.toString()
             viewModel.addUser(name, job)
-            // Go back after submitting
             requireActivity().onBackPressedDispatcher.onBackPressed()
         }
     }

@@ -19,7 +19,6 @@ class SplashFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         Handler(Looper.getMainLooper()).postDelayed({
-//            val action = SplashFragmentDirections.actionSplashScreenToDashboardScreen()
             val action = SplashFragmentDirections.actionSplashScreenToUserListFragment()
             findNavController().navigate(action)
         }, 2000)

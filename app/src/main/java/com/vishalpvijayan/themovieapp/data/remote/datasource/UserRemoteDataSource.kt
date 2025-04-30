@@ -5,12 +5,6 @@ import com.vishalpvijayan.themovieapp.data.remote.model.UserRequest
 import com.vishalpvijayan.themovieapp.data.remote.model.UsersResponse
 import javax.inject.Inject
 
-//class UserRemoteDataSource @Inject constructor(
-//    private val apiService: ApiService
-//) {
-//    suspend fun getUsers(page: Int): UsersResponse = apiService.getUsers(page)
-//}
-
 class UserRemoteDataSource @Inject constructor(
     private val apiService: ApiService
 ) {
