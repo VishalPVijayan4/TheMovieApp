@@ -3,6 +3,7 @@ package com.vishalpvijayan.themovieapp.presentation.ui.fragment
 import com.vishalpvijayan.themovieapp.presentation.ui.adapter.OfflineUserAdapter
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,6 +11,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.vishalpvijayan.themovieapp.data.local.entity.UserEntity
 import com.vishalpvijayan.themovieapp.databinding.FragmentOfflineUsersBinding
 import com.vishalpvijayan.themovieapp.presentation.viewmodel.OfflineUserViewModel
 import com.vishalpvijayan.themovieapp.presentation.viewmodel.UserViewModel
@@ -21,8 +23,7 @@ import kotlinx.coroutines.launch
 @AndroidEntryPoint
 class OfflineUsersFragment : Fragment() {
 
-    private var _binding: FragmentOfflineUsersBinding? = null
-    private val binding get() = _binding!!
+    private lateinit var binding: FragmentOfflineUsersBinding
     private val viewModel: UserViewModel by viewModels()
     private lateinit var adapter: OfflineUserAdapter
 
@@ -30,7 +31,7 @@ class OfflineUsersFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
-        _binding = FragmentOfflineUsersBinding.inflate(inflater, container, false)
+        binding = FragmentOfflineUsersBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -42,17 +43,18 @@ class OfflineUsersFragment : Fragment() {
         binding.recyclerViewOfflineUsers.adapter = adapter
 
 
+//        viewModel.unsyncedUsers.observe(viewLifecycleOwner) {
+//            adapter.submitList(it)
+//        }
+
         viewModel.unsyncedUsers.observe(viewLifecycleOwner) {
+            Log.d("OfflineUsersFragment", "Users received: ${it.size}")
             adapter.submitList(it)
         }
 
         viewModel.getUnsyncedUsers()
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    }
 }
 
 

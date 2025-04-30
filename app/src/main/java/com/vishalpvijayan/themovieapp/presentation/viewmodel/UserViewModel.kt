@@ -38,6 +38,16 @@ class UserViewModel @Inject constructor(
         }
     }
 
+    /*private val _unsyncedUsers = MutableLiveData<List<User>>()
+    val unsyncedUsers: LiveData<List<User>> = _unsyncedUsers
+
+    fun getUnsyncedUsers() {
+        viewModelScope.launch {
+            val result = userRepository.getOfflineUsers()
+            _unsyncedUsers.value = result
+        }
+    }*/
+
     fun syncSingleUser(user: UserEntity) {
         viewModelScope.launch {
             userRepository.syncSingleUser(user)
