@@ -16,6 +16,24 @@ import com.vishalpvijayan.themovieapp.domain.repository.UserRepository
 import com.vishalpvijayan.themovieapp.utils.worker.SyncUserWorker
 import kotlinx.coroutines.flow.Flow
 
+//import android.util.Log
+//import androidx.paging.Pager
+//import androidx.paging.PagingConfig
+//import androidx.paging.PagingData
+//import androidx.work.OneTimeWorkRequestBuilder
+//import androidx.work.WorkManager
+//import com.vishalpvijayan.themovieapp.data.local.datasource.UserLocalDataSource
+//import com.vishalpvijayan.themovieapp.data.local.entity.UserEntity
+//import com.vishalpvijayan.themovieapp.data.remote.datasource.UserPagingSource
+//import com.vishalpvijayan.themovieapp.data.remote.datasource.UserRemoteDataSource
+//
+//import com.vishalpvijayan.themovieapp.domain.model.toRequest
+//import com.vishalpvijayan.themovieapp.domain.repository.UserRepository
+//import com.vishalpvijayan.themovieapp.utils.worker.SyncUserWorker
+//import kotlinx.coroutines.flow.Flow
+//import com.vishalpvijayan.themovieapp.data.local.mapper.toDomain
+//import com.vishalpvijayan.themovieapp.domain.model.User
+
 class UserRepositoryImpl(
     private val remoteDataSource: UserRemoteDataSource,
     private val localDataSource: UserLocalDataSource,
@@ -60,10 +78,10 @@ class UserRepositoryImpl(
             Log.d("UserRepository", "Syncing user: $user")
             val response = remoteDataSource.addUser(user.toRequest())
             if (response.isSuccessful) {
-                Log.d("UserRepository", "User synced successfully: ${user.name}")
+                Log.d("UserRepository", "User synced successfully: ${user.fullName}")
                 localDataSource.markUserAsSynced(user)
             } else {
-                Log.e("UserRepository", "Failed to sync user: ${user.name}")
+                Log.e("UserRepository", "Failed to sync user: ${user.fullName}")
             }
         }
     }
@@ -86,9 +104,14 @@ class UserRepositoryImpl(
         }
     }
 
+//    override suspend fun getOfflineUsers(): Flow<List<User>> {
+//        return localDataSource.getUnsyncedUsersFlow()
+//    }
+
     override suspend fun getOfflineUsers(): List<User> {
-        return localDataSource.getUnsyncedUsersFlow()
+        return localDataSource.getUnsyncedUsers().map { it }
     }
+
 
     private fun enqueueSyncUserWork() {
         val syncRequest = OneTimeWorkRequestBuilder<SyncUserWorker>()
@@ -96,3 +119,5 @@ class UserRepositoryImpl(
         workManager.enqueue(syncRequest)
     }
 }
+
+

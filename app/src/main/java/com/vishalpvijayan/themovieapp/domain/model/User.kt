@@ -8,3 +8,4 @@ data class User(
     val profilePic: String? = null,
     val isSynced: Boolean = false,
 )
+

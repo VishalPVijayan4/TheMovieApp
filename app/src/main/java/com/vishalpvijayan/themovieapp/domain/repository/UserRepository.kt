@@ -10,7 +10,8 @@ interface UserRepository {
     fun getUsers(): Flow<PagingData<User>>
     suspend fun addUser(user: User): Result<Unit>
     suspend fun syncOfflineUsers()
-    suspend fun getOfflineUsers(): List<User>
     fun getOfflineUnsyncedUsers(): Flow<List<UserEntity>>
     suspend fun syncSingleUser(user: UserEntity)
+    suspend fun getOfflineUsers(): List<User>
+
 }

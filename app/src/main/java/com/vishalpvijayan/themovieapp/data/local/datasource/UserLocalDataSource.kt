@@ -6,6 +6,7 @@ import com.vishalpvijayan.themovieapp.data.local.mapper.toDomain
 import com.vishalpvijayan.themovieapp.data.local.mapper.toEntity
 import com.vishalpvijayan.themovieapp.domain.model.User
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 //class UserLocalDataSource @Inject constructor(
@@ -44,9 +45,12 @@ class UserLocalDataSource @Inject constructor(
         userDao.insertUser(user.toEntity()) // Map domain → entity
     }
 
-    /*suspend fun getUnsyncedUsers(): List<User> {
-        return userDao.getUnsyncedUsers().map { it.toDomain() } // Map entity → domain
-    }*/
+    suspend fun getUnsyncedUsers(): List<User> {
+        return userDao.getUnsyncedUsers().map { it } as List<User> // Map entity → domain
+    }
+
+
+
 
     suspend fun markUserAsSynced(user: User) {
         userDao.updateUser(user.copy(isSynced = true).toEntity()) // Update sync flag

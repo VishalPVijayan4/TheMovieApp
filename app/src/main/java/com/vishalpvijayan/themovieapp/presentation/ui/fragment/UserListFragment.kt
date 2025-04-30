@@ -42,7 +42,7 @@ class UserListFragment : Fragment(R.layout.fragment_user_list) {
             findNavController().navigate(R.id.action_userListFragment_to_addUserFragment)
         }
 
-        binding.fabAddUser.setOnClickListener {
+        binding.fabOfflineUsers.setOnClickListener {
             findNavController().navigate(R.id.action_userListFragment_to_offlineUserFragment)
         }
 

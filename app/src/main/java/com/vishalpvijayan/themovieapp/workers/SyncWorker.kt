@@ -9,6 +9,7 @@ import com.vishalpvijayan.themovieapp.data.local.dao.UserDao
 import com.vishalpvijayan.themovieapp.data.local.mapper.toDomain
 import com.vishalpvijayan.themovieapp.data.remote.api.ApiService
 import com.vishalpvijayan.themovieapp.domain.model.toRequest
+import kotlinx.coroutines.flow.first
 import javax.inject.Inject
 
 @HiltWorker
@@ -22,7 +23,8 @@ class SyncUserWorker @Inject constructor(
     override suspend fun doWork(): Result {
         Log.d("SyncUserWorker", "WorkManager triggered to sync offline users.")
         return try {
-            val unsyncedUsers = userDao.getUnsyncedUsers()
+//            val unsyncedUsers = userDao.getUnsyncedUsers()
+            val unsyncedUsers = userDao.getUnsyncedUsers().first()
 
             for (user in unsyncedUsers) {
                 val response = apiService.addUser(user.toDomain().toRequest())
@@ -32,13 +34,6 @@ class SyncUserWorker @Inject constructor(
                 }
             }
 
-           /* for (user in unsyncedUsers) {
-                val response = apiService.addUser(user.toRequest())// convert here
-
-                if (response.isSuccessful) {
-                    userDao.updateUser(user.copy(isSynced = true))
-                }
-            }*/
 
             Result.success()
         } catch (exception: Exception) {
