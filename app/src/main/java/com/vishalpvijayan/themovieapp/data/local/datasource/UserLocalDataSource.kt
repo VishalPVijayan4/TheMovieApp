@@ -32,5 +32,9 @@ class UserLocalDataSource @Inject constructor(
         userDao.updateUser(user.copy(isSynced = true).toEntity()) // Update sync flag
     }
 
+    fun getAllUsers(): Flow<List<UserEntity>> {
+        return userDao.getAllUsers()
+    }
+
 }
 

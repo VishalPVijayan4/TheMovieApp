@@ -8,6 +8,7 @@ import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import com.vishalpvijayan.themovieapp.data.local.datasource.UserLocalDataSource
 import com.vishalpvijayan.themovieapp.data.local.entity.UserEntity
+import com.vishalpvijayan.themovieapp.data.local.mapper.toDomain
 import com.vishalpvijayan.themovieapp.data.remote.datasource.UserPagingSource
 import com.vishalpvijayan.themovieapp.data.remote.datasource.UserRemoteDataSource
 import com.vishalpvijayan.themovieapp.domain.model.User
@@ -15,24 +16,7 @@ import com.vishalpvijayan.themovieapp.domain.model.toRequest
 import com.vishalpvijayan.themovieapp.domain.repository.UserRepository
 import com.vishalpvijayan.themovieapp.workers.SyncUserWorker
 import kotlinx.coroutines.flow.Flow
-
-//import android.util.Log
-//import androidx.paging.Pager
-//import androidx.paging.PagingConfig
-//import androidx.paging.PagingData
-//import androidx.work.OneTimeWorkRequestBuilder
-//import androidx.work.WorkManager
-//import com.vishalpvijayan.themovieapp.data.local.datasource.UserLocalDataSource
-//import com.vishalpvijayan.themovieapp.data.local.entity.UserEntity
-//import com.vishalpvijayan.themovieapp.data.remote.datasource.UserPagingSource
-//import com.vishalpvijayan.themovieapp.data.remote.datasource.UserRemoteDataSource
-//
-//import com.vishalpvijayan.themovieapp.domain.model.toRequest
-//import com.vishalpvijayan.themovieapp.domain.repository.UserRepository
-//import com.vishalpvijayan.themovieapp.utils.worker.SyncUserWorker
-//import kotlinx.coroutines.flow.Flow
-//import com.vishalpvijayan.themovieapp.data.local.mapper.toDomain
-//import com.vishalpvijayan.themovieapp.domain.model.User
+import kotlinx.coroutines.flow.map
 
 class UserRepositoryImpl(
     private val remoteDataSource: UserRemoteDataSource,
@@ -70,7 +54,7 @@ class UserRepositoryImpl(
         }
     }
 
-    override suspend fun syncOfflineUsers() {
+    override suspend fun syncOfflineUsers(user: User) {
         Log.d("UserRepository", "Starting sync of offline users")
         val unsyncedUsers = localDataSource.getUnsyncedUsers()
 
@@ -85,6 +69,7 @@ class UserRepositoryImpl(
             }
         }
     }
+
 
     override fun getOfflineUnsyncedUsers(): Flow<List<UserEntity>> {
         return localDataSource.getUnsyncedUsersFlow()
@@ -104,9 +89,16 @@ class UserRepositoryImpl(
         }
     }
 
-    override suspend fun getOfflineUsers(): List<User> {
-        return localDataSource.getUnsyncedUsers().map { it }
+    override fun getOfflineUsers(): Flow<List<User>> {
+        return localDataSource.getAllUsers()
+            .map { userEntities: List<UserEntity> -> userEntities.map { it.toDomain() } }
     }
+
+
+    /*override fun getOfflineUsers(): Flow<List<User>> {
+        return localDataSource.getAllUsers()
+            .map{ userEntities -> userEntities.map { it.toDomain() } }
+    }*/
 
 
     private fun enqueueSyncUserWork() {

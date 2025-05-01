@@ -1,7 +1,9 @@
 package com.vishalpvijayan.themovieapp.di
 
 import android.content.Context
+import androidx.hilt.work.HiltWorkerFactory
 import androidx.room.Room
+import androidx.work.Configuration
 import androidx.work.WorkManager
 import com.vishalpvijayan.themovieapp.data.local.dao.UserDao
 import com.vishalpvijayan.themovieapp.data.local.database.AppDatabase
@@ -95,6 +97,16 @@ object AppModule {
     fun provideWorkManager(@ApplicationContext context: Context): WorkManager {
         return WorkManager.getInstance(context)
     }
+
+    @Provides
+    @Singleton
+    fun provideWorkManagerConfiguration(workerFactory: HiltWorkerFactory): Configuration {
+        return Configuration.Builder()
+            .setWorkerFactory(workerFactory)
+            .build()
+    }
+
+
 
     @Provides
     @Singleton

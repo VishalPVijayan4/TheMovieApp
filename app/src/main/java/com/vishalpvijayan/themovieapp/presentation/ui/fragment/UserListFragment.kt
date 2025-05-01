@@ -48,7 +48,11 @@ class UserListFragment : Fragment(R.layout.fragment_user_list) {
 
         // Collect and submit paging data
         lifecycleScope.launchWhenStarted {
-            viewModel.users.collectLatest { pagingData ->
+//            viewModel.users.collectLatest { pagingData ->
+//                adapter.submitData(pagingData)
+//            }
+
+            viewModel.pagedUsers.collectLatest { pagingData ->
                 adapter.submitData(pagingData)
             }
         }

@@ -105,6 +105,8 @@ dependencies {
 
     // Dagger-Hilt
     val hilt = ("2.48.1")
+    implementation ("androidx.hilt:hilt-work:1.1.0")
+    ksp("androidx.hilt:hilt-compiler:1.1.0")
     implementation("com.google.dagger:hilt-android:$hilt")
     ksp("com.google.dagger:hilt-compiler:$hilt")
     ksp ("com.google.dagger:hilt-android-compiler:$hilt")

@@ -9,13 +9,14 @@ import com.vishalpvijayan.themovieapp.data.local.dao.UserDao
 import com.vishalpvijayan.themovieapp.data.local.mapper.toDomain
 import com.vishalpvijayan.themovieapp.data.remote.api.ApiService
 import com.vishalpvijayan.themovieapp.domain.model.toRequest
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedInject
 import kotlinx.coroutines.flow.first
-import javax.inject.Inject
 
 @HiltWorker
-class SyncUserWorker @Inject constructor(
-    appContext: Context,
-    workerParams: WorkerParameters,
+class SyncUserWorker @AssistedInject constructor(
+    @Assisted appContext: Context,
+    @Assisted workerParams: WorkerParameters,
     private val apiService: ApiService,
     private val userDao: UserDao
 ) : CoroutineWorker(appContext, workerParams) {
@@ -27,16 +28,18 @@ class SyncUserWorker @Inject constructor(
 
             for (user in usersOffline) {
                 val response = apiService.addUser(user.toDomain().toRequest())
-
                 if (response.isSuccessful) {
+
+                    Log.d("SyncUserWorker", "Successfully synced user ${user.userId}")
                     userDao.updateUser(user.copy(isSynced = true))
+                } else {
+                    Log.e("SyncUserWorker", "Failed to sync user ${user.userId}: ${response.code()}")
                 }
             }
 
-
             Result.success()
         } catch (exception: Exception) {
-            Log.d("Exception while sync",exception.toString())
+            Log.e("SyncUserWorker", "Exception during sync", exception)
             Result.retry()
         }
     }

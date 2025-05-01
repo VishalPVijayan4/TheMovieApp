@@ -19,9 +19,9 @@ class OfflineUserViewModel @Inject constructor(
     private val _offlineUsers = MutableStateFlow<List<User>>(emptyList())
     val offlineUsers: StateFlow<List<User>> = _offlineUsers
 
-    fun fetchOfflineUsers() {
-        viewModelScope.launch {
-            _offlineUsers.value = userRepository.getOfflineUsers()
-        }
-    }
+//    fun fetchOfflineUsers() {
+//        viewModelScope.launch {
+//            _offlineUsers.value = userRepository.getOfflineUsers()
+//        }
+//    }
 }
