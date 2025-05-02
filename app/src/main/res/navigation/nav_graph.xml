@@ -42,6 +42,9 @@
         <action
             android:id="@+id/action_userListFragment_to_offlineUserFragment"
             app:destination="@id/offlineUserFragment" />
+        <action
+            android:id="@+id/action_userListFragment_to_movieListFragment"
+            app:destination="@id/movieListFragment" />
     </fragment>
 
     <fragment
@@ -60,6 +63,27 @@
         tools:layout="@layout/fragment_offline_users" >
 
 
+    </fragment>
+
+    <fragment
+        android:id="@+id/movieListFragment"
+        android:name="com.vishalpvijayan.themovieapp.presentation.ui.fragment.MovieListFragment"
+        android:label="fragment_offline_users"
+        tools:layout="@layout/fragment_movie_list" >
+
+
+        <action
+            android:id="@+id/action_movieListFragment_to_movieDetailFragment"
+            app:destination="@id/movieDetailFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/movieDetailFragment"
+        android:name="com.vishalpvijayan.themovieapp.presentation.ui.fragment.MovieDetailFragment"
+        android:label="Movie Details" >
+        <argument
+            android:name="movieId"
+            app:argType="integer" />
     </fragment>
 
 

@@ -9,8 +9,10 @@ import androidx.work.WorkManager
 import com.vishalpvijayan.themovieapp.data.local.datasource.UserLocalDataSource
 import com.vishalpvijayan.themovieapp.data.local.entity.UserEntity
 import com.vishalpvijayan.themovieapp.data.local.mapper.toDomain
+import com.vishalpvijayan.themovieapp.data.remote.datasource.MovieRemoteDataSource
 import com.vishalpvijayan.themovieapp.data.remote.datasource.UserPagingSource
 import com.vishalpvijayan.themovieapp.data.remote.datasource.UserRemoteDataSource
+import com.vishalpvijayan.themovieapp.data.remote.model.Movie
 import com.vishalpvijayan.themovieapp.domain.model.User
 import com.vishalpvijayan.themovieapp.domain.model.toRequest
 import com.vishalpvijayan.themovieapp.domain.repository.UserRepository
@@ -21,6 +23,7 @@ import kotlinx.coroutines.flow.map
 class UserRepositoryImpl(
     private val remoteDataSource: UserRemoteDataSource,
     private val localDataSource: UserLocalDataSource,
+    private val movieRemoteDataSource: MovieRemoteDataSource,
     private val workManager: WorkManager
 ) : UserRepository {
 
@@ -105,6 +108,14 @@ class UserRepositoryImpl(
         val syncRequest = OneTimeWorkRequestBuilder<SyncUserWorker>()
             .build()
         workManager.enqueue(syncRequest)
+    }
+
+    override suspend fun fetchTrendingMovies(): List<Movie>? {
+        return remoteDataSource.fetchTrendingMovies()
+    }
+
+    override suspend fun fetchMovieDetails(movieId: Int): Movie? {
+        return remoteDataSource.fetchMovieDetails(movieId)
     }
 }
 

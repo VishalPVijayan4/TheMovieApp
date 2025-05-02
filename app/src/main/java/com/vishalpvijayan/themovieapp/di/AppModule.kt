@@ -9,6 +9,7 @@ import com.vishalpvijayan.themovieapp.data.local.dao.UserDao
 import com.vishalpvijayan.themovieapp.data.local.database.AppDatabase
 import com.vishalpvijayan.themovieapp.data.local.datasource.UserLocalDataSource
 import com.vishalpvijayan.themovieapp.data.remote.api.ApiService
+import com.vishalpvijayan.themovieapp.data.remote.datasource.MovieRemoteDataSource
 import com.vishalpvijayan.themovieapp.data.remote.datasource.UserRemoteDataSource
 import com.vishalpvijayan.themovieapp.data.repository.UserRepositoryImpl
 import com.vishalpvijayan.themovieapp.domain.repository.UserRepository
@@ -22,6 +23,7 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import javax.inject.Named
 import javax.inject.Singleton
 
 @Module
@@ -30,6 +32,7 @@ object AppModule {
 
     @Provides
     @Singleton
+    @Named("ReqresOkHttp")
     fun provideOkHttpClient(): OkHttpClient {
         val loggingInterceptor = HttpLoggingInterceptor().apply {
             level = HttpLoggingInterceptor.Level.BODY
@@ -50,7 +53,8 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {
+    @ReqresApi
+    fun provideRetrofit(@Named("ReqresRetrofit") okHttpClient: OkHttpClient): Retrofit {
         return Retrofit.Builder()
             .baseUrl("https://reqres.in/")
             .client(okHttpClient)
@@ -60,14 +64,11 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideApiService(retrofit: Retrofit): ApiService {
-        return retrofit.create(ApiService::class.java)
-    }
-
-    @Provides
-    @Singleton
     fun provideUserRemoteDataSource(apiService: ApiService): UserRemoteDataSource {
-        return UserRemoteDataSource(apiService)
+        return UserRemoteDataSource(
+            apiService,
+            tmdbApiService = TODO()
+        )
     }
 
     @Provides
@@ -76,7 +77,7 @@ object AppModule {
         return Room.databaseBuilder(
             context,
             AppDatabase::class.java,
-            "user_database" // Give a meaningful name if you want
+            "user_database"
         ).build()
     }
 
@@ -106,16 +107,15 @@ object AppModule {
             .build()
     }
 
-
-
     @Provides
     @Singleton
     fun provideUserRepository(
         remoteDataSource: UserRemoteDataSource,
         localDataSource: UserLocalDataSource,
+        movieRemoteDataSource: MovieRemoteDataSource,
         workManager: WorkManager
     ): UserRepository {
-        return UserRepositoryImpl(remoteDataSource, localDataSource, workManager)
+        return UserRepositoryImpl(remoteDataSource, localDataSource, movieRemoteDataSource, workManager)
     }
-
 }
+

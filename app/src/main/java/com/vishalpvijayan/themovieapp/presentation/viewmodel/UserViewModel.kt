@@ -1,11 +1,9 @@
 package com.vishalpvijayan.themovieapp.presentation.viewmodel
 
 import android.app.Application
-import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
@@ -17,15 +15,11 @@ import androidx.work.WorkManager
 import com.vishalpvijayan.themovieapp.data.local.entity.UserEntity
 import com.vishalpvijayan.themovieapp.domain.model.User
 import com.vishalpvijayan.themovieapp.domain.repository.UserRepository
-import com.vishalpvijayan.themovieapp.domain.usecase.AddUserUseCase
 import com.vishalpvijayan.themovieapp.domain.usecase.SyncUserUseCase
 import com.vishalpvijayan.themovieapp.workers.SyncUserWorker
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject

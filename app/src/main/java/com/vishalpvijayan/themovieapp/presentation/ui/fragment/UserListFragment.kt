@@ -14,11 +14,12 @@ import com.vishalpvijayan.themovieapp.databinding.FragmentUserListBinding
 import com.vishalpvijayan.themovieapp.presentation.ui.adapter.UserLoadStateAdapter
 import com.vishalpvijayan.themovieapp.presentation.ui.adapter.UserPagingAdapter
 import com.vishalpvijayan.themovieapp.presentation.viewmodel.UserViewModel
+import com.vishalpvijayan.themovieapp.utilis.OnItemClickListener
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 
 @AndroidEntryPoint
-class UserListFragment : Fragment(R.layout.fragment_user_list) {
+class UserListFragment : Fragment(R.layout.fragment_user_list),OnItemClickListener {
 
     private val viewModel: UserViewModel by viewModels()
     private lateinit var adapter: UserPagingAdapter
@@ -28,7 +29,7 @@ class UserListFragment : Fragment(R.layout.fragment_user_list) {
         super.onViewCreated(view, savedInstanceState)
 
         // Initialize the adapter
-        adapter = UserPagingAdapter()
+        adapter = UserPagingAdapter(onItemClickListener = this)
 
         // Inflate the binding
         binding = FragmentUserListBinding.bind(view)
@@ -56,6 +57,11 @@ class UserListFragment : Fragment(R.layout.fragment_user_list) {
                 adapter.submitData(pagingData)
             }
         }
+    }
+
+    override fun onItemClick(position: Int) {
+        val action = UserListFragmentDirections.actionUserListFragmentToMovieListFragment()
+        findNavController().navigate(action)
     }
 }
 

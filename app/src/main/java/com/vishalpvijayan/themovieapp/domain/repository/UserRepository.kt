@@ -2,6 +2,7 @@ package com.vishalpvijayan.themovieapp.domain.repository
 
 import androidx.paging.PagingData
 import com.vishalpvijayan.themovieapp.data.local.entity.UserEntity
+import com.vishalpvijayan.themovieapp.data.remote.model.Movie
 import com.vishalpvijayan.themovieapp.domain.model.User
 import kotlinx.coroutines.flow.Flow
 
@@ -14,4 +15,7 @@ interface UserRepository {
     suspend fun syncSingleUser(user: UserEntity)
 //    suspend fun getOfflineUsers(): List<User>
 fun getOfflineUsers(): Flow<List<User>>
+
+    suspend fun fetchTrendingMovies(): List<Movie>?
+    suspend fun fetchMovieDetails(movieId: Int): Movie?
 }
