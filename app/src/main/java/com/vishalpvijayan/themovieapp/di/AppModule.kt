@@ -40,7 +40,8 @@ object AppModule {
 
         val headerInterceptor = Interceptor { chain ->
             val newRequest = chain.request().newBuilder()
-                .addHeader("x-api-key", "reqres-free-v1")
+//                .addHeader("x-api-key", "reqres-free-v1")
+                .addHeader("x-api-key", "reqres_a78e2ad54ea34e0e9ebbb6a22d80edb7")
                 .build()
             chain.proceed(newRequest)
         }
