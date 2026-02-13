@@ -39,8 +39,8 @@ object TmdbNetworkModule {
 
     @Provides
     @Singleton
-    @TmdbApi
-    fun provideTmdbRetrofit(@Named("TmdbRetrofit") client: OkHttpClient): Retrofit {
+    @Named("TmdbRetrofit")
+    fun provideTmdbRetrofit(@Named("TmdbOkHttp") client: OkHttpClient): Retrofit {
         return Retrofit.Builder()
             .baseUrl("https://api.themoviedb.org/3/")
             .client(client)
