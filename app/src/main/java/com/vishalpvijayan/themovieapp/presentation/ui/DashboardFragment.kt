@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.vishalpvijayan.themovieapp.databinding.FragmentDashboardBinding
 import com.vishalpvijayan.themovieapp.databinding.LayoutDashboardSectionBinding
+import com.vishalpvijayan.themovieapp.presentation.ui.adapter.BannerAdapter
 import com.vishalpvijayan.themovieapp.presentation.ui.adapter.MovieAdapter
 import com.vishalpvijayan.themovieapp.presentation.viewmodel.AuthViewModel
 import com.vishalpvijayan.themovieapp.presentation.viewmodel.DashboardViewModel
@@ -30,6 +31,7 @@ class DashboardFragment : Fragment() {
     private lateinit var popularAdapter: MovieAdapter
     private lateinit var topRatedAdapter: MovieAdapter
     private lateinit var upcomingAdapter: MovieAdapter
+    private lateinit var bannerAdapter: BannerAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -42,6 +44,11 @@ class DashboardFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        bannerAdapter = BannerAdapter { movie ->
+            findNavController().navigate(DashboardFragmentDirections.actionDashboardScreenToMovieDetailFragment(movie.id))
+        }
+        binding.vpMovieCarousel.adapter = bannerAdapter
 
         nowPlayingAdapter = createAdapter()
         popularAdapter = createAdapter()
@@ -62,6 +69,10 @@ class DashboardFragment : Fragment() {
             if (!loggedIn) {
                 findNavController().navigate(DashboardFragmentDirections.actionDashboardScreenToLoginFragment())
             }
+        }
+
+        dashboardViewModel.carouselMovies.observe(viewLifecycleOwner) {
+            bannerAdapter.submitList(it)
         }
 
         dashboardViewModel.sections.observe(viewLifecycleOwner) { sections ->

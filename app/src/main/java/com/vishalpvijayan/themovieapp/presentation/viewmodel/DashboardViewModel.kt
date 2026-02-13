@@ -44,9 +44,13 @@ class DashboardViewModel @Inject constructor(
     private val _accountDetails = MutableLiveData<AccountDetails?>()
     val accountDetails: LiveData<AccountDetails?> = _accountDetails
 
+    private val _carouselMovies = MutableLiveData<List<Movie>>(emptyList())
+    val carouselMovies: LiveData<List<Movie>> = _carouselMovies
+
     init {
         loadAllSections()
         loadAccount()
+        loadCarousel()
     }
 
     fun loadAllSections() {
@@ -113,6 +117,13 @@ class DashboardViewModel @Inject constructor(
             else -> apiService.getNowPlayingMovies(page)
         }
         return response.body()?.results.orEmpty().take(15)
+    }
+
+    private fun loadCarousel() {
+        viewModelScope.launch {
+            runCatching { apiService.discoverMovie(page = 1) }
+                .onSuccess { _carouselMovies.postValue(it.body()?.results.orEmpty().take(8)) }
+        }
     }
 
     private fun loadAccount() {

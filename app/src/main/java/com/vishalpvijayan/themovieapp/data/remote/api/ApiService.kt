@@ -6,6 +6,7 @@ import com.vishalpvijayan.themovieapp.data.remote.model.DeleteSessionRequest
 import com.vishalpvijayan.themovieapp.data.remote.model.LoginRequest
 import com.vishalpvijayan.themovieapp.data.remote.model.Movie
 import com.vishalpvijayan.themovieapp.data.remote.model.EpisodeGroupsResponse
+import com.vishalpvijayan.themovieapp.data.remote.model.GenreListResponse
 import com.vishalpvijayan.themovieapp.data.remote.model.MovieImagesResponse
 import com.vishalpvijayan.themovieapp.data.remote.model.TvSeriesDetail
 import com.vishalpvijayan.themovieapp.data.remote.model.VideoResponse
@@ -65,6 +66,18 @@ interface ApiService {
     @retrofit2.http.HTTP(method = "DELETE", path = "authentication/session", hasBody = true)
     suspend fun deleteSession(@Body request: DeleteSessionRequest): Response<TmdbStatusResponse>
 
+    @GET("authentication/token/new")
+    suspend fun createRequestToken(): Response<AuthTokenResponse>
+
+    @POST("authentication/token/validate_with_login")
+    suspend fun validateWithLogin(@Body request: LoginRequest): Response<AuthTokenResponse>
+
+    @POST("authentication/session/new")
+    suspend fun createSession(@Body request: SessionRequest): Response<SessionResponse>
+
+    @retrofit2.http.HTTP(method = "DELETE", path = "authentication/session", hasBody = true)
+    suspend fun deleteSession(@Body request: DeleteSessionRequest): Response<TmdbStatusResponse>
+
     @GET("trending/movie/day")
     suspend fun getTrendingMovies(): Response<MovieResponse>
 
@@ -80,12 +93,23 @@ interface ApiService {
     @GET("movie/upcoming")
     suspend fun getUpcomingMovies(@Query("page") page: Int): Response<MovieResponse>
 
+
+    @GET("discover/movie")
+    suspend fun discoverMovie(
+        @Query("page") page: Int,
+        @Query("include_adult") includeAdult: Boolean = false,
+        @Query("include_video") includeVideo: Boolean = false,
+        @Query("sort_by") sortBy: String = "popularity.desc",
+        @Query("with_genres") withGenres: Int? = null
+    ): Response<MovieResponse>
+
     @GET("discover/tv")
     suspend fun discoverTv(
         @Query("page") page: Int,
         @Query("include_adult") includeAdult: Boolean = false,
         @Query("include_null_first_air_dates") includeNullFirstAirDates: Boolean = false,
-        @Query("sort_by") sortBy: String = "popularity.desc"
+        @Query("sort_by") sortBy: String = "popularity.desc",
+        @Query("with_genres") withGenres: Int? = null
     ): Response<MovieResponse>
 
     @GET("tv/airing_today")
@@ -144,6 +168,12 @@ interface ApiService {
         @Path("series_id") seriesId: Int,
         @Query("page") page: Int = 1
     ): Response<MovieResponse>
+
+    @GET("genre/movie/list")
+    suspend fun getMovieGenres(): Response<GenreListResponse>
+
+    @GET("genre/tv/list")
+    suspend fun getTvGenres(): Response<GenreListResponse>
 
     @GET("account/{account_id}")
     suspend fun getAccountDetails(@Path("account_id") accountId: Int = 8167978): Response<AccountDetails>

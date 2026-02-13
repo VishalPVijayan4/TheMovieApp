@@ -34,8 +34,14 @@ class MovieListFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         adapter = MovieAdapter(onItemClick = { movie ->
-            val action = MovieListFragmentDirections.actionMovieListFragmentToMovieDetailFragment(movie.id)
-            findNavController().navigate(action)
+            val isTvCategory = args.category.startsWith("tv_") || args.category.startsWith("genre_tv_")
+            if (isTvCategory) {
+                val action = MovieListFragmentDirections.actionMovieListFragmentToTvSeriesDetailFragment(movie.id)
+                findNavController().navigate(action)
+            } else {
+                val action = MovieListFragmentDirections.actionMovieListFragmentToMovieDetailFragment(movie.id)
+                findNavController().navigate(action)
+            }
         })
 
         binding.txtTreanding.text = args.title

@@ -10,16 +10,24 @@ class MovieRemoteDataSource @Inject constructor(
 ) {
 
     suspend fun fetchMoviesByCategory(category: String, page: Int = 1): List<Movie>? {
-        val response = when (category) {
-            "now_playing" -> tmdbApiService.getNowPlayingMovies(page)
-            "popular" -> tmdbApiService.getPopularMovies(page)
-            "top_rated" -> tmdbApiService.getTopRatedMovies(page)
-            "upcoming" -> tmdbApiService.getUpcomingMovies(page)
-            "tv_discover" -> tmdbApiService.discoverTv(page)
-            "tv_airing_today" -> tmdbApiService.getAiringTodayTv(page)
-            "tv_on_the_air" -> tmdbApiService.getOnTheAirTv(page)
-            "tv_popular" -> tmdbApiService.getPopularTv(page)
-            "tv_top_rated" -> tmdbApiService.getTopRatedTv(page)
+        val response = when {
+            category.startsWith("genre_movie_") -> {
+                val genreId = category.removePrefix("genre_movie_").toIntOrNull()
+                tmdbApiService.discoverMovie(page = page, withGenres = genreId)
+            }
+            category.startsWith("genre_tv_") -> {
+                val genreId = category.removePrefix("genre_tv_").toIntOrNull()
+                tmdbApiService.discoverTv(page = page, withGenres = genreId)
+            }
+            category == "now_playing" -> tmdbApiService.getNowPlayingMovies(page)
+            category == "popular" -> tmdbApiService.getPopularMovies(page)
+            category == "top_rated" -> tmdbApiService.getTopRatedMovies(page)
+            category == "upcoming" -> tmdbApiService.getUpcomingMovies(page)
+            category == "tv_discover" -> tmdbApiService.discoverTv(page)
+            category == "tv_airing_today" -> tmdbApiService.getAiringTodayTv(page)
+            category == "tv_on_the_air" -> tmdbApiService.getOnTheAirTv(page)
+            category == "tv_popular" -> tmdbApiService.getPopularTv(page)
+            category == "tv_top_rated" -> tmdbApiService.getTopRatedTv(page)
             else -> tmdbApiService.getTrendingMovies()
         }
         return if (response.isSuccessful) response.body()?.results else null

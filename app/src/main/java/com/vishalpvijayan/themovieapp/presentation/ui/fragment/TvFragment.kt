@@ -11,6 +11,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.vishalpvijayan.themovieapp.databinding.FragmentTvBinding
 import com.vishalpvijayan.themovieapp.databinding.LayoutDashboardSectionBinding
+import com.vishalpvijayan.themovieapp.presentation.ui.adapter.BannerAdapter
 import com.vishalpvijayan.themovieapp.presentation.ui.adapter.MovieAdapter
 import com.vishalpvijayan.themovieapp.presentation.viewmodel.SectionState
 import com.vishalpvijayan.themovieapp.presentation.viewmodel.TvViewModel
@@ -23,11 +24,11 @@ class TvFragment : Fragment() {
     private val binding get() = _binding!!
     private val viewModel: TvViewModel by viewModels()
 
-    private lateinit var discoverAdapter: MovieAdapter
     private lateinit var airingAdapter: MovieAdapter
     private lateinit var onAirAdapter: MovieAdapter
     private lateinit var popularAdapter: MovieAdapter
     private lateinit var topRatedAdapter: MovieAdapter
+    private lateinit var bannerAdapter: BannerAdapter
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentTvBinding.inflate(inflater, container, false)
@@ -37,20 +38,27 @@ class TvFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        discoverAdapter = createAdapter()
+        bannerAdapter = BannerAdapter { tv ->
+            val action = TvFragmentDirections.actionTvFragmentToTvSeriesDetailFragment(tv.id)
+            findNavController().navigate(action)
+        }
+        binding.vpTvCarousel.adapter = bannerAdapter
+
         airingAdapter = createAdapter()
         onAirAdapter = createAdapter()
         popularAdapter = createAdapter()
         topRatedAdapter = createAdapter()
 
-        setupSection(binding.sectionDiscoverTv, discoverAdapter, "tv_discover")
         setupSection(binding.sectionAiringToday, airingAdapter, "tv_airing_today")
         setupSection(binding.sectionOnTheAir, onAirAdapter, "tv_on_the_air")
         setupSection(binding.sectionPopularTv, popularAdapter, "tv_popular")
         setupSection(binding.sectionTopRatedTv, topRatedAdapter, "tv_top_rated")
 
+        viewModel.carouselShows.observe(viewLifecycleOwner) {
+            bannerAdapter.submitList(it)
+        }
+
         viewModel.sections.observe(viewLifecycleOwner) { sections ->
-            renderSection(binding.sectionDiscoverTv, discoverAdapter, sections["tv_discover"])
             renderSection(binding.sectionAiringToday, airingAdapter, sections["tv_airing_today"])
             renderSection(binding.sectionOnTheAir, onAirAdapter, sections["tv_on_the_air"])
             renderSection(binding.sectionPopularTv, popularAdapter, sections["tv_popular"])

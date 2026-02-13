@@ -23,9 +23,11 @@
                 android:textSize="26sp"
                 android:textStyle="bold" />
 
-            <include
-                android:id="@+id/sectionDiscoverTv"
-                layout="@layout/layout_dashboard_section" />
+            <androidx.viewpager2.widget.ViewPager2
+                android:id="@+id/vpTvCarousel"
+                android:layout_width="match_parent"
+                android:layout_height="190dp"
+                android:layout_marginTop="10dp" />
 
             <include
                 android:id="@+id/sectionAiringToday"

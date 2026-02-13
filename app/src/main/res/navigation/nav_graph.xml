@@ -91,6 +91,9 @@
         <action
             android:id="@+id/action_movieListFragment_to_movieDetailFragment"
             app:destination="@id/movieDetailFragment" />
+        <action
+            android:id="@+id/action_movieListFragment_to_tvSeriesDetailFragment"
+            app:destination="@id/tvSeriesDetailFragment" />
     </fragment>
 
     <fragment
@@ -103,6 +106,17 @@
         <action
             android:id="@+id/action_movieDetailFragment_self"
             app:destination="@id/movieDetailFragment" />
+    </fragment>
+
+
+    <fragment
+        android:id="@+id/genresFragment"
+        android:name="com.vishalpvijayan.themovieapp.presentation.ui.fragment.GenresFragment"
+        android:label="Genres"
+        tools:layout="@layout/fragment_genres">
+        <action
+            android:id="@+id/action_genresFragment_to_movieListFragment"
+            app:destination="@id/movieListFragment" />
     </fragment>
 
     <fragment

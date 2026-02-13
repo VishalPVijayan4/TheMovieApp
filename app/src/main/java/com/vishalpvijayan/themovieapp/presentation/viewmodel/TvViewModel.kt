@@ -19,12 +19,14 @@ class TvViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val categories = listOf(
-        "tv_discover" to "Discover TV",
         "tv_airing_today" to "Airing Today",
         "tv_on_the_air" to "On The Air",
         "tv_popular" to "Popular TV",
         "tv_top_rated" to "Top Rated TV"
     )
+
+    private val _carouselShows = MutableLiveData<List<Movie>>(emptyList())
+    val carouselShows: LiveData<List<Movie>> = _carouselShows
 
     private val _sections = MutableLiveData(
         categories.associate { (category, title) -> category to SectionState(title = title, category = category) }
@@ -33,6 +35,14 @@ class TvViewModel @Inject constructor(
 
     init {
         loadAllSections()
+        loadCarousel()
+    }
+
+    private fun loadCarousel() {
+        viewModelScope.launch {
+            runCatching { apiService.discoverTv(page = 1) }
+                .onSuccess { _carouselShows.postValue(it.body()?.results.orEmpty().take(8)) }
+        }
     }
 
     fun loadAllSections() {
@@ -88,12 +98,11 @@ class TvViewModel @Inject constructor(
 
     private suspend fun fetchCategory(category: String, page: Int): List<Movie> {
         val response = when (category) {
-            "tv_discover" -> apiService.discoverTv(page)
             "tv_airing_today" -> apiService.getAiringTodayTv(page)
             "tv_on_the_air" -> apiService.getOnTheAirTv(page)
             "tv_popular" -> apiService.getPopularTv(page)
             "tv_top_rated" -> apiService.getTopRatedTv(page)
-            else -> apiService.discoverTv(page)
+            else -> apiService.getAiringTodayTv(page)
         }
         return response.body()?.results.orEmpty().take(15)
     }
