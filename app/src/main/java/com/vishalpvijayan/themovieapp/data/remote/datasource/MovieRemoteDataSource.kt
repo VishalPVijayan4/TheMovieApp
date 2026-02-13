@@ -2,10 +2,11 @@ package com.vishalpvijayan.themovieapp.data.remote.datasource
 
 import com.vishalpvijayan.themovieapp.data.remote.api.ApiService
 import com.vishalpvijayan.themovieapp.data.remote.model.Movie
+import com.vishalpvijayan.themovieapp.di.TmdbApi
 import javax.inject.Inject
 
 class MovieRemoteDataSource  @Inject constructor(
-    private val tmdbApiService: ApiService
+    @TmdbApi private val tmdbApiService: ApiService
 ) {
 
 /*    suspend fun fetchTrendingMovies(): List<Movie>? {
