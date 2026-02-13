@@ -15,6 +15,8 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object TmdbNetworkModule {
 
+    private const val TMDB_BEARER_TOKEN = "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJiMjZlZDM1YWMzMTdlODViYmQwYjIzOTZlYmFlYjkxOCIsIm5iZiI6MTU0Mzg1Njc5NS4zNiwic3ViIjoiNWMwNTYyOWIwZTBhMjYzM2E2MGNjN2ZmIiwic2NvcGVzIjpbImFwaV9yZWFkIl0sInZlcnNpb24iOjF9.J5VYtii0CZLZeC_92MMepwXdsMV163TNYaZFVYKrUpA"
+
     @Provides
     @Singleton
     @Named("TmdbOkHttp")
@@ -25,9 +27,14 @@ object TmdbNetworkModule {
                 val url = original.url.newBuilder()
                     .addQueryParameter("language", "en-US")
                     .addQueryParameter("page", "1")
-                    .addQueryParameter("api_key", "15aba79ddfe444dd96584f89f138f7fd")
                     .build()
-                val request = original.newBuilder().url(url).build()
+
+                val request = original.newBuilder()
+                    .url(url)
+                    .addHeader("accept", "application/json")
+                    .addHeader("Authorization", TMDB_BEARER_TOKEN)
+                    .build()
+
                 chain.proceed(request)
             }
             .addInterceptor(HttpLoggingInterceptor().apply {
@@ -36,11 +43,10 @@ object TmdbNetworkModule {
             .build()
     }
 
-
     @Provides
     @Singleton
-    @TmdbApi
-    fun provideTmdbRetrofit(@Named("TmdbRetrofit") client: OkHttpClient): Retrofit {
+    @Named("TmdbRetrofit")
+    fun provideTmdbRetrofit(@Named("TmdbOkHttp") client: OkHttpClient): Retrofit {
         return Retrofit.Builder()
             .baseUrl("https://api.themoviedb.org/3/")
             .client(client)
@@ -48,5 +54,3 @@ object TmdbNetworkModule {
             .build()
     }
 }
-
-

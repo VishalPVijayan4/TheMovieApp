@@ -17,5 +17,6 @@ interface UserRepository {
 fun getOfflineUsers(): Flow<List<User>>
 
     suspend fun fetchTrendingMovies(): List<Movie>?
+    suspend fun fetchMoviesByCategory(category: String): List<Movie>?
     suspend fun fetchMovieDetails(movieId: Int): Movie?
 }
