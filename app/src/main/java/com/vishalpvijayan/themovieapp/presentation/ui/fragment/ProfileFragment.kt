@@ -40,7 +40,7 @@ class ProfileFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         viewModel.loadProfile()
 
-        binding.tvVersion.text = "Version ${BuildConfig.VERSION_NAME}"
+        binding.tvVersion.text = "Version 1.0.0"
 
         binding.btnAbout.setOnClickListener {
             showScrollableDialog(
