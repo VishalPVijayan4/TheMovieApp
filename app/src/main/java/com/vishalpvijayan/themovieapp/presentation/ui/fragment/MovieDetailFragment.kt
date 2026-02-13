@@ -79,6 +79,19 @@ class MovieDetailFragment : Fragment() {
             binding.movieImagesInfo.text = it
         }
 
+        viewModel.watchProvidersText.observe(viewLifecycleOwner) {
+            binding.tvWatchProviders.text = it
+        }
+
+        viewModel.watchProvidersLink.observe(viewLifecycleOwner) { link ->
+            binding.btnOpenProvider.visibility = if (link.isNullOrBlank()) View.GONE else View.VISIBLE
+            binding.btnOpenProvider.setOnClickListener {
+                if (!link.isNullOrBlank()) {
+                    findNavController().navigate(MovieDetailFragmentDirections.actionMovieDetailFragmentToWebViewFragment(link))
+                }
+            }
+        }
+
         viewModel.similarMovies.observe(viewLifecycleOwner) { similar ->
             similarAdapter.submitList(similar)
         }

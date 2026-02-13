@@ -31,6 +31,11 @@ class TvSeriesDetailViewModel @Inject constructor(
     private val _similar = MutableLiveData<List<Movie>>(emptyList())
     val similar: LiveData<List<Movie>> = _similar
 
+    private val _watchProvidersText = MutableLiveData("Watch providers unavailable")
+    val watchProvidersText: LiveData<String> = _watchProvidersText
+    private val _watchProvidersLink = MutableLiveData<String?>(null)
+    val watchProvidersLink: LiveData<String?> = _watchProvidersLink
+
     private val _loading = MutableLiveData(false)
     val loading: LiveData<Boolean> = _loading
 
@@ -46,11 +51,17 @@ class TvSeriesDetailViewModel @Inject constructor(
                 val videosResp = apiService.getTvSeriesVideos(seriesId)
                 val groupsResp = apiService.getTvEpisodeGroups(seriesId)
                 val similarResp = apiService.getSimilarTvSeries(seriesId)
+                val providersResp = apiService.getTvWatchProviders(seriesId)
 
                 _detail.postValue(detailResp.body())
                 _videos.postValue(videosResp.body()?.results.orEmpty())
                 _episodeGroups.postValue(groupsResp.body()?.results.orEmpty())
                 _similar.postValue(similarResp.body()?.results.orEmpty().take(15))
+                val providers = providersResp.body()?.results.orEmpty()
+                if (providers.isNotEmpty()) {
+                    _watchProvidersText.postValue("Where to watch: " + providers.keys.take(6).joinToString())
+                    _watchProvidersLink.postValue(providers.values.firstOrNull()?.link)
+                }
             }.onFailure {
                 _error.postValue("Failed to load TV details")
             }

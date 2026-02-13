@@ -37,6 +37,11 @@ class MovieDetailViewModel @Inject constructor(
     private val _imagesInfo = MutableLiveData<String>("")
     val imagesInfo: LiveData<String> = _imagesInfo
 
+    private val _watchProvidersText = MutableLiveData("Watch providers unavailable")
+    val watchProvidersText: LiveData<String> = _watchProvidersText
+    private val _watchProvidersLink = MutableLiveData<String?>(null)
+    val watchProvidersLink: LiveData<String?> = _watchProvidersLink
+
     fun getMovieDetail(movieId: Int) {
         _isLoading.value = true
         viewModelScope.launch {
@@ -50,6 +55,13 @@ class MovieDetailViewModel @Inject constructor(
 
                 val similarResponse = tmdbApiService.getSimilarMovies(movieId)
                 _similarMovies.postValue(similarResponse.body()?.results.orEmpty().take(15))
+
+                val providersResponse = tmdbApiService.getMovieWatchProviders(movieId)
+                val providers = providersResponse.body()?.results.orEmpty()
+                if (providers.isNotEmpty()) {
+                    _watchProvidersText.postValue("Where to watch: " + providers.keys.take(6).joinToString())
+                    _watchProvidersLink.postValue(providers.values.firstOrNull()?.link)
+                }
 
                 val imagesResponse = tmdbApiService.getMovieImages(movieId)
                 val posters = imagesResponse.body()?.posters?.size ?: 0
