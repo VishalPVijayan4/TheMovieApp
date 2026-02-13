@@ -10,21 +10,26 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.vishalpvijayan.themovieapp.R
+import com.vishalpvijayan.themovieapp.utilis.SessionManager
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @SuppressLint("CustomSplashScreen")
+@AndroidEntryPoint
 class SplashFragment : Fragment() {
+
+    @Inject
+    lateinit var sessionManager: SessionManager
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         Handler(Looper.getMainLooper()).postDelayed({
-            val prefs = requireContext().getSharedPreferences("tmdb_session", android.content.Context.MODE_PRIVATE)
-            val sessionId = prefs.getString("session_id", null)
-            val action = if (sessionId.isNullOrBlank()) {
-                SplashFragmentDirections.actionSplashScreenToLoginFragment()
-            } else {
+            val action = if (sessionManager.isLoggedIn()) {
                 SplashFragmentDirections.actionSplashScreenToDashboardScreen()
+            } else {
+                SplashFragmentDirections.actionSplashScreenToLoginFragment()
             }
             findNavController().navigate(action)
         }, 1500)

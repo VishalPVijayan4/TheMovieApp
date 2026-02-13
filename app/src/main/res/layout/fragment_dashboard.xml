@@ -4,110 +4,82 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".presentation.ui.DashboardFragment">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/prime_background"
-        android:padding="16dp">
-
-        <TextView
-            android:id="@+id/tvDashboardTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Prime Dashboard"
-            android:textColor="@color/prime_text"
-            android:textSize="24sp"
-            android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnLogout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Logout"
-            app:backgroundTint="@color/prime_accent"
-            app:layout_constraintBaseline_toBaselineOf="@id/tvDashboardTitle"
-            app:layout_constraintEnd_toEndOf="parent" />
+        android:fillViewport="true">
 
         <LinearLayout
-            android:id="@+id/categoriesContainer"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_marginTop="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tvDashboardTitle">
+            android:padding="16dp">
 
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/cardNowPlaying"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
-                app:cardBackgroundColor="@color/prime_card"
-                app:cardCornerRadius="14dp">
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
 
-                <TextView
-                    android:layout_width="match_parent"
+                <LinearLayout
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:padding="16dp"
-                    android:text="Now Playing"
-                    android:textColor="@color/prime_text"
-                    android:textSize="18sp" />
-            </com.google.android.material.card.MaterialCardView>
+                    android:layout_weight="1"
+                    android:orientation="vertical">
 
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/cardPopular"
-                android:layout_width="match_parent"
+                    <TextView
+                        android:id="@+id/tvDashboardTitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Prime Dashboard"
+                        android:textColor="@color/prime_text"
+                        android:textSize="26sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tvWelcome"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:text="Welcome back"
+                        android:textColor="@color/prime_text_secondary"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/tvQuote"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:text="What do you wanna watch today?"
+                        android:textColor="@color/prime_text"
+                        android:textSize="16sp" />
+                </LinearLayout>
+
+                <ImageView
+                    android:id="@+id/ivAvatar"
+                    android:layout_width="52dp"
+                    android:layout_height="52dp"
+                    android:background="@drawable/circle_background"
+                    android:contentDescription="Profile"
+                    android:padding="6dp"
+                    android:src="@drawable/ic_movies" />
+            </LinearLayout>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnLogout"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
-                app:cardBackgroundColor="@color/prime_card"
-                app:cardCornerRadius="14dp">
+                android:layout_gravity="end"
+                android:layout_marginTop="8dp"
+                android:text="Logout"
+                app:backgroundTint="@color/prime_accent" />
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:padding="16dp"
-                    android:text="Popular"
-                    android:textColor="@color/prime_text"
-                    android:textSize="18sp" />
-            </com.google.android.material.card.MaterialCardView>
+            <include layout="@layout/layout_dashboard_section" android:id="@+id/sectionNowPlaying" />
+            <include layout="@layout/layout_dashboard_section" android:id="@+id/sectionPopular" />
+            <include layout="@layout/layout_dashboard_section" android:id="@+id/sectionTopRated" />
+            <include layout="@layout/layout_dashboard_section" android:id="@+id/sectionUpcoming" />
 
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/cardTopRated"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
-                app:cardBackgroundColor="@color/prime_card"
-                app:cardCornerRadius="14dp">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:padding="16dp"
-                    android:text="Top Rated"
-                    android:textColor="@color/prime_text"
-                    android:textSize="18sp" />
-            </com.google.android.material.card.MaterialCardView>
-
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/cardUpcoming"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:cardBackgroundColor="@color/prime_card"
-                app:cardCornerRadius="14dp">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:padding="16dp"
-                    android:text="Upcoming"
-                    android:textColor="@color/prime_text"
-                    android:textSize="18sp" />
-            </com.google.android.material.card.MaterialCardView>
         </LinearLayout>
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
 </layout>

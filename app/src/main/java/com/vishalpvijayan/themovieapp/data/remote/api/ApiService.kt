@@ -1,5 +1,6 @@
 package com.vishalpvijayan.themovieapp.data.remote.api
 
+import com.vishalpvijayan.themovieapp.data.remote.model.AccountDetails
 import com.vishalpvijayan.themovieapp.data.remote.model.AuthTokenResponse
 import com.vishalpvijayan.themovieapp.data.remote.model.DeleteSessionRequest
 import com.vishalpvijayan.themovieapp.data.remote.model.LoginRequest
@@ -41,17 +42,20 @@ interface ApiService {
     suspend fun getTrendingMovies(): Response<MovieResponse>
 
     @GET("movie/now_playing")
-    suspend fun getNowPlayingMovies(): Response<MovieResponse>
+    suspend fun getNowPlayingMovies(@Query("page") page: Int): Response<MovieResponse>
 
     @GET("movie/popular")
-    suspend fun getPopularMovies(): Response<MovieResponse>
+    suspend fun getPopularMovies(@Query("page") page: Int): Response<MovieResponse>
 
     @GET("movie/top_rated")
-    suspend fun getTopRatedMovies(): Response<MovieResponse>
+    suspend fun getTopRatedMovies(@Query("page") page: Int): Response<MovieResponse>
 
     @GET("movie/upcoming")
-    suspend fun getUpcomingMovies(): Response<MovieResponse>
+    suspend fun getUpcomingMovies(@Query("page") page: Int): Response<MovieResponse>
 
     @GET("movie/{movie_id}")
     suspend fun getMovieDetails(@Path("movie_id") movieId: Int): Response<Movie>
+
+    @GET("account/{account_id}")
+    suspend fun getAccountDetails(@Path("account_id") accountId: Int = 8167978): Response<AccountDetails>
 }

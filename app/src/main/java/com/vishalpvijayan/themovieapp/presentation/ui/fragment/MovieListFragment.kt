@@ -47,5 +47,9 @@ class MovieListFragment : Fragment() {
         }
 
         viewModel.loadMovies(args.category)
+
+        binding.btnLoadMore.setOnClickListener {
+            viewModel.loadMoreMovies()
+        }
     }
 }

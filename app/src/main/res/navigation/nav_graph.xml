@@ -37,6 +37,12 @@
             android:id="@+id/action_dashboardScreen_to_movieListFragment"
             app:destination="@id/movieListFragment" />
         <action
+            android:id="@+id/action_dashboardScreen_to_movieDetailFragment"
+            app:destination="@id/movieDetailFragment" />
+        <action
+            android:id="@+id/action_dashboardScreen_to_profileFragment"
+            app:destination="@id/profileFragment" />
+        <action
             android:id="@+id/action_dashboardScreen_to_loginFragment"
             app:destination="@id/loginFragment" />
     </fragment>
@@ -95,5 +101,11 @@
             android:name="movieId"
             app:argType="integer" />
     </fragment>
+
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.vishalpvijayan.themovieapp.presentation.ui.fragment.ProfileFragment"
+        android:label="Profile"
+        tools:layout="@layout/fragment_profile" />
 
 </navigation>

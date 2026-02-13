@@ -115,8 +115,8 @@ class UserRepositoryImpl(
     }
 
 
-    override suspend fun fetchMoviesByCategory(category: String): List<Movie>? {
-        return movieRemoteDataSource.fetchMoviesByCategory(category)
+    override suspend fun fetchMoviesByCategory(category: String, page: Int): List<Movie>? {
+        return movieRemoteDataSource.fetchMoviesByCategory(category, page)
     }
 
     override suspend fun fetchMovieDetails(movieId: Int): Movie? {

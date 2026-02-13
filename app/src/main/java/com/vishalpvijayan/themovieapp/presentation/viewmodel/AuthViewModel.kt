@@ -53,6 +53,7 @@ class AuthViewModel @Inject constructor(
                 val sessionId = session.body()?.session_id
                 if (session.isSuccessful && !sessionId.isNullOrBlank()) {
                     sessionManager.saveSessionId(sessionId)
+                    sessionManager.saveExpiry(tokenResponse.body()?.expires_at)
                     _loggedIn.postValue(true)
                     _authMessage.postValue("Login successful")
                 } else {

@@ -2,7 +2,8 @@ package com.vishalpvijayan.themovieapp.data.remote.model
 
 data class AuthTokenResponse(
     val success: Boolean,
-    val request_token: String
+    val request_token: String,
+    val expires_at: String? = null
 )
 
 data class LoginRequest(
