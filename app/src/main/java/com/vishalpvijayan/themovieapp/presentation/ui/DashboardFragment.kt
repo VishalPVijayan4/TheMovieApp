@@ -52,6 +52,7 @@ class DashboardFragment : Fragment() {
         }
         binding.vpMovieCarousel.adapter = bannerAdapter
         binding.vpMovieCarousel.offscreenPageLimit = 1
+        binding.vpMovieCarousel.clipToPadding = true
 
         nowPlayingAdapter = createAdapter()
         popularAdapter = createAdapter()
@@ -108,15 +109,12 @@ class DashboardFragment : Fragment() {
     private fun renderSection(section: LayoutDashboardSectionBinding, adapter: MovieAdapter, state: SectionState?) {
         state ?: return
         section.tvSectionTitle.text = state.title
-        section.sectionLoading.isVisible = state.isLoading
+        section.shimmerContainer.isVisible = state.isLoading
         section.errorContainer.isVisible = !state.error.isNullOrBlank()
         section.tvError.text = state.error
+        section.rvMovies.isVisible = !state.isLoading && state.error.isNullOrBlank()
+        if (state.isLoading) section.shimmerContainer.startShimmer() else section.shimmerContainer.stopShimmer()
         adapter.submitList(state.movies)
-
-        if (state.isLoading) {
-            section.sectionLoading.alpha = 0f
-            section.sectionLoading.animate().alpha(1f).setDuration(350).start()
-        }
     }
 
     private fun createAdapter(): MovieAdapter = MovieAdapter(onItemClick = { movie ->

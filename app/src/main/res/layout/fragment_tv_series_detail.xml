@@ -69,8 +69,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:text="Play Trailer"
-                app:backgroundTint="@color/prime_card" />
+                android:text="Watch Trailer"
+                app:backgroundTint="#FF0000" />
 
             <TextView
                 android:id="@+id/tvCreditsTitle"

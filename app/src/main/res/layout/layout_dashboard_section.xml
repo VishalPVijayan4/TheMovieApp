@@ -16,13 +16,19 @@
             android:textSize="20sp"
             android:textStyle="bold" />
 
-        <ProgressBar
-            android:id="@+id/sectionLoading"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:visibility="gone"
-            android:indeterminateTint="@color/prime_accent" />
+        <com.facebook.shimmer.ShimmerFrameLayout
+            android:id="@+id/shimmerContainer"
+            android:layout_width="match_parent"
+            android:layout_height="220dp"
+            android:layout_marginTop="8dp"
+            app:shimmer_auto_start="true"
+            app:shimmer_duration="900">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/prime_card" />
+        </com.facebook.shimmer.ShimmerFrameLayout>
 
         <LinearLayout
             android:id="@+id/errorContainer"
@@ -56,6 +62,7 @@
             android:layout_height="220dp"
             android:layout_marginTop="8dp"
             android:orientation="horizontal"
+            android:visibility="gone"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
     </LinearLayout>

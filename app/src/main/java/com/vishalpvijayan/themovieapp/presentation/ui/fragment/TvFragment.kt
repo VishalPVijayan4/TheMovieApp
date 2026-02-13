@@ -46,6 +46,7 @@ class TvFragment : Fragment() {
         }
         binding.vpTvCarousel.adapter = bannerAdapter
         binding.vpTvCarousel.offscreenPageLimit = 1
+        binding.vpTvCarousel.clipToPadding = true
 
         airingAdapter = createAdapter()
         onAirAdapter = createAdapter()
@@ -82,9 +83,11 @@ class TvFragment : Fragment() {
     private fun renderSection(section: LayoutDashboardSectionBinding, adapter: MovieAdapter, state: SectionState?) {
         state ?: return
         section.tvSectionTitle.text = state.title
-        section.sectionLoading.isVisible = state.isLoading
+        section.shimmerContainer.isVisible = state.isLoading
         section.errorContainer.isVisible = !state.error.isNullOrBlank()
         section.tvError.text = state.error
+        section.rvMovies.isVisible = !state.isLoading && state.error.isNullOrBlank()
+        if (state.isLoading) section.shimmerContainer.startShimmer() else section.shimmerContainer.stopShimmer()
         adapter.submitList(state.movies)
     }
 
