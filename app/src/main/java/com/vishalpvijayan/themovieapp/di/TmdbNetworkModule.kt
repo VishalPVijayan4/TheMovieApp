@@ -25,7 +25,7 @@ object TmdbNetworkModule {
                 val url = original.url.newBuilder()
                     .addQueryParameter("language", "en-US")
                     .addQueryParameter("page", "1")
-                    .addQueryParameter("api_key", "15aba79ddfe444dd96584f89f138f7fd")
+                    .addQueryParameter("api_key", "b26ed35ac317e85bbd0b2396ebaeb918")
                     .build()
                 val request = original.newBuilder().url(url).build()
                 chain.proceed(request)
