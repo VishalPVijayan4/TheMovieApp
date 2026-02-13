@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".presentation.ui.fragment.TvFragment">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/prime_background"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="TV Shows"
+                android:textColor="@color/prime_text"
+                android:textSize="26sp"
+                android:textStyle="bold" />
+
+            <include
+                android:id="@+id/sectionDiscoverTv"
+                layout="@layout/layout_dashboard_section" />
+
+            <include
+                android:id="@+id/sectionAiringToday"
+                layout="@layout/layout_dashboard_section" />
+
+            <include
+                android:id="@+id/sectionOnTheAir"
+                layout="@layout/layout_dashboard_section" />
+
+            <include
+                android:id="@+id/sectionPopularTv"
+                layout="@layout/layout_dashboard_section" />
+
+            <include
+                android:id="@+id/sectionTopRatedTv"
+                layout="@layout/layout_dashboard_section" />
+
+        </LinearLayout>
+
+    </ScrollView>
+</layout>

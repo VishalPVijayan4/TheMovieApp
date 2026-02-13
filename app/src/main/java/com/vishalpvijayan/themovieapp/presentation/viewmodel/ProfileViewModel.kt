@@ -1,0 +1,33 @@
+package com.vishalpvijayan.themovieapp.presentation.viewmodel
+
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.vishalpvijayan.themovieapp.data.remote.api.ApiService
+import com.vishalpvijayan.themovieapp.data.remote.model.AccountDetails
+import com.vishalpvijayan.themovieapp.di.TmdbApi
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
+import javax.inject.Inject
+
+@HiltViewModel
+class ProfileViewModel @Inject constructor(
+    @TmdbApi private val apiService: ApiService
+) : ViewModel() {
+
+    private val _profile = MutableLiveData<AccountDetails?>()
+    val profile: LiveData<AccountDetails?> = _profile
+
+    private val _loading = MutableLiveData(false)
+    val loading: LiveData<Boolean> = _loading
+
+    fun loadProfile() {
+        viewModelScope.launch {
+            _loading.postValue(true)
+            runCatching { apiService.getAccountDetails() }
+                .onSuccess { _profile.postValue(it.body()) }
+            _loading.postValue(false)
+        }
+    }
+}

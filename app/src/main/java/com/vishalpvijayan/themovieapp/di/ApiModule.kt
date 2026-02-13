@@ -15,8 +15,15 @@ object ApiModule {
 
     @Provides
     @Singleton
+    @ReqresApi
     fun provideApiService(@Named("ReqresRetrofit") retrofit: Retrofit): ApiService {
         return retrofit.create(ApiService::class.java)
     }
-}
 
+    @Provides
+    @Singleton
+    @TmdbApi
+    fun provideTmdbApiService(@Named("TmdbRetrofit") retrofit: Retrofit): ApiService {
+        return retrofit.create(ApiService::class.java)
+    }
+}
