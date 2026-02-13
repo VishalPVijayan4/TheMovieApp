@@ -20,7 +20,7 @@ class SearchAdapter(
 
     inner class SearchViewHolder(private val binding: ItemSearchResultBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: Movie) {
-            binding.tvTitle.text = item.title ?: item.name ?: "Untitled"
+            binding.tvTitle.text = item.title ?: "Untitled"
             binding.tvMeta.text = "⭐ ${item.vote_average?.let { String.format("%.1f", it) } ?: "N/A"}"
             val poster = item.poster_path ?: item.backdrop_path
             Glide.with(binding.root).load("https://image.tmdb.org/t/p/w342$poster").into(binding.ivPoster)
