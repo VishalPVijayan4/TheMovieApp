@@ -41,6 +41,12 @@ class LoginFragment : Fragment() {
             }
         }
 
+
+        binding.btnSignUp.setOnClickListener {
+            findNavController().navigate(
+                LoginFragmentDirections.actionLoginFragmentToWebViewFragment("https://www.themoviedb.org/signup")
+            )
+        }
         authViewModel.isLoading.observe(viewLifecycleOwner) {
             binding.progressBar.visibility = if (it) View.VISIBLE else View.GONE
             binding.btnLogin.isEnabled = !it

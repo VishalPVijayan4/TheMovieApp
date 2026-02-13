@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.vishalpvijayan.themovieapp.data.remote.api.ApiService
 import com.vishalpvijayan.themovieapp.data.remote.model.EpisodeGroupItem
+import com.vishalpvijayan.themovieapp.data.remote.model.CreditPerson
 import com.vishalpvijayan.themovieapp.data.remote.model.Movie
 import com.vishalpvijayan.themovieapp.data.remote.model.TvSeriesDetail
 import com.vishalpvijayan.themovieapp.data.remote.model.VideoItem
@@ -31,6 +32,17 @@ class TvSeriesDetailViewModel @Inject constructor(
     private val _similar = MutableLiveData<List<Movie>>(emptyList())
     val similar: LiveData<List<Movie>> = _similar
 
+    private val _credits = MutableLiveData<List<CreditPerson>>(emptyList())
+    val credits: LiveData<List<CreditPerson>> = _credits
+
+    private val _trailerKey = MutableLiveData<String?>(null)
+    val trailerKey: LiveData<String?> = _trailerKey
+
+    private val _watchProvidersText = MutableLiveData("Watch providers unavailable")
+    val watchProvidersText: LiveData<String> = _watchProvidersText
+    private val _watchProvidersLink = MutableLiveData<String?>(null)
+    val watchProvidersLink: LiveData<String?> = _watchProvidersLink
+
     private val _loading = MutableLiveData(false)
     val loading: LiveData<Boolean> = _loading
 
@@ -46,11 +58,21 @@ class TvSeriesDetailViewModel @Inject constructor(
                 val videosResp = apiService.getTvSeriesVideos(seriesId)
                 val groupsResp = apiService.getTvEpisodeGroups(seriesId)
                 val similarResp = apiService.getSimilarTvSeries(seriesId)
+                val creditsResp = apiService.getTvCredits(seriesId)
+                val providersResp = apiService.getTvWatchProviders(seriesId)
 
                 _detail.postValue(detailResp.body())
-                _videos.postValue(videosResp.body()?.results.orEmpty())
+                val videos = videosResp.body()?.results.orEmpty()
+                _videos.postValue(videos)
+                _trailerKey.postValue(videos.firstOrNull { it.type == "Trailer" && it.site == "YouTube" }?.key)
                 _episodeGroups.postValue(groupsResp.body()?.results.orEmpty())
                 _similar.postValue(similarResp.body()?.results.orEmpty().take(15))
+                _credits.postValue(creditsResp.body()?.cast.orEmpty().take(15))
+                val providers = providersResp.body()?.results.orEmpty()
+                if (providers.isNotEmpty()) {
+                    _watchProvidersText.postValue("Where to watch: " + providers.keys.take(6).joinToString())
+                    _watchProvidersLink.postValue(providers.values.firstOrNull()?.link)
+                }
             }.onFailure {
                 _error.postValue("Failed to load TV details")
             }

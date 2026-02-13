@@ -7,9 +7,10 @@ import android.view.ViewGroup
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.vishalpvijayan.themovieapp.databinding.FragmentSearchBinding
-import com.vishalpvijayan.themovieapp.presentation.ui.adapter.MovieAdapter
+import com.vishalpvijayan.themovieapp.presentation.ui.adapter.SearchAdapter
 import com.vishalpvijayan.themovieapp.presentation.viewmodel.SearchViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -19,7 +20,7 @@ class SearchFragment : Fragment() {
     private var _binding: FragmentSearchBinding? = null
     private val binding get() = _binding!!
     private val viewModel: SearchViewModel by viewModels()
-    private lateinit var adapter: MovieAdapter
+    private lateinit var adapter: SearchAdapter
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentSearchBinding.inflate(inflater, container, false)
@@ -28,7 +29,13 @@ class SearchFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        adapter = MovieAdapter(onItemClick = { })
+        adapter = SearchAdapter { item ->
+            if (binding.rbTv.isChecked) {
+                findNavController().navigate(SearchFragmentDirections.actionSearchFragmentToTvSeriesDetailFragment(item.id))
+            } else {
+                findNavController().navigate(SearchFragmentDirections.actionSearchFragmentToMovieDetailFragment(item.id))
+            }
+        }
         binding.rvSearch.layoutManager = LinearLayoutManager(requireContext())
         binding.rvSearch.adapter = adapter
 
