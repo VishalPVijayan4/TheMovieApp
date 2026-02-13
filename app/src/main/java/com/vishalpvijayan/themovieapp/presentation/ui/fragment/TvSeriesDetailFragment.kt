@@ -68,6 +68,19 @@ class TvSeriesDetailFragment : Fragment() {
             similarAdapter.submitList(it)
         }
 
+        viewModel.watchProvidersText.observe(viewLifecycleOwner) {
+            binding.tvWatchProviders.text = it
+        }
+
+        viewModel.watchProvidersLink.observe(viewLifecycleOwner) { link ->
+            binding.btnOpenProvider.visibility = if (link.isNullOrBlank()) View.GONE else View.VISIBLE
+            binding.btnOpenProvider.setOnClickListener {
+                if (!link.isNullOrBlank()) {
+                    findNavController().navigate(TvSeriesDetailFragmentDirections.actionTvSeriesDetailFragmentToWebViewFragment(link))
+                }
+            }
+        }
+
         viewModel.loading.observe(viewLifecycleOwner) {
             binding.progressBar.visibility = if (it) View.VISIBLE else View.GONE
         }
