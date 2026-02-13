@@ -6,27 +6,35 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent"
+        android:background="@color/prime_background">
 
         <TextView
             android:id="@+id/txtTreanding"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="20dp"
-            android:text="Trending Movies"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:layout_margin="16dp"
+            android:textColor="@color/prime_text"
+            android:textSize="22sp"
+            app:layout_constraintTop_toTopOf="parent"/>
 
         <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvMovieList"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:id="@+id/rvMovieList"
-            android:orientation="vertical"
-            app:layout_constraintStart_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/txtTreanding"
+            app:layout_constraintBottom_toTopOf="@+id/btnLoadMore"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnLoadMore"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:text="Load more"
+            app:backgroundTint="@color/prime_accent"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/txtTreanding"/>
+            app:layout_constraintStart_toStartOf="parent"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-
 </layout>

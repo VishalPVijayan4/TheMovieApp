@@ -143,4 +143,9 @@
     <color name="dark_blue">#00008B</color>
     <color name="navy">#000080</color>
     <color name="black">#000000</color>
+    <color name="prime_background">#0B1020</color>
+    <color name="prime_card">#172038</color>
+    <color name="prime_accent">#00A8E1</color>
+    <color name="prime_text">#EAF4FF</color>
+    <color name="prime_text_secondary">#9FB4CC</color>
 </resources>
