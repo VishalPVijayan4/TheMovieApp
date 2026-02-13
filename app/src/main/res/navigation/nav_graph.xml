@@ -103,6 +103,22 @@
     </fragment>
 
     <fragment
+        android:id="@+id/tvFragment"
+        android:name="com.vishalpvijayan.themovieapp.presentation.ui.fragment.TvFragment"
+        android:label="TV"
+        tools:layout="@layout/fragment_tv">
+        <action
+            android:id="@+id/action_tvFragment_to_movieListFragment"
+            app:destination="@id/movieListFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/searchFragment"
+        android:name="com.vishalpvijayan.themovieapp.presentation.ui.fragment.SearchFragment"
+        android:label="Search"
+        tools:layout="@layout/fragment_search" />
+
+    <fragment
         android:id="@+id/profileFragment"
         android:name="com.vishalpvijayan.themovieapp.presentation.ui.fragment.ProfileFragment"
         android:label="Profile"

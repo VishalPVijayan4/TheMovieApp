@@ -12,6 +12,16 @@
         android:title="Movies" />
 
     <item
+        android:id="@+id/tvFragment"
+        android:icon="@drawable/ic_movies"
+        android:title="TV" />
+
+    <item
+        android:id="@+id/searchFragment"
+        android:icon="@drawable/ic_movies"
+        android:title="Search" />
+
+    <item
         android:id="@+id/profileFragment"
         android:icon="@drawable/ic_movies"
         android:title="Profile" />

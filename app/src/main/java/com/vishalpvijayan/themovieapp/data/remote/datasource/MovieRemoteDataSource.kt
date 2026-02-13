@@ -15,6 +15,11 @@ class MovieRemoteDataSource @Inject constructor(
             "popular" -> tmdbApiService.getPopularMovies(page)
             "top_rated" -> tmdbApiService.getTopRatedMovies(page)
             "upcoming" -> tmdbApiService.getUpcomingMovies(page)
+            "tv_discover" -> tmdbApiService.discoverTv(page)
+            "tv_airing_today" -> tmdbApiService.getAiringTodayTv(page)
+            "tv_on_the_air" -> tmdbApiService.getOnTheAirTv(page)
+            "tv_popular" -> tmdbApiService.getPopularTv(page)
+            "tv_top_rated" -> tmdbApiService.getTopRatedTv(page)
             else -> tmdbApiService.getTrendingMovies()
         }
         return if (response.isSuccessful) response.body()?.results else null
