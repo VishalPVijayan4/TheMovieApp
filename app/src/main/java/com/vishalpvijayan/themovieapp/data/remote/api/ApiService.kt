@@ -17,6 +17,7 @@ import com.vishalpvijayan.themovieapp.data.remote.model.TmdbStatusResponse
 import com.vishalpvijayan.themovieapp.data.remote.model.UserRequest
 import com.vishalpvijayan.themovieapp.data.remote.model.UserResponse
 import com.vishalpvijayan.themovieapp.data.remote.model.UsersResponse
+import com.vishalpvijayan.themovieapp.data.remote.model.WatchProviderResponse
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -168,6 +169,13 @@ interface ApiService {
         @Path("series_id") seriesId: Int,
         @Query("page") page: Int = 1
     ): Response<MovieResponse>
+
+
+    @GET("movie/{movie_id}/watch/providers")
+    suspend fun getMovieWatchProviders(@Path("movie_id") movieId: Int): Response<WatchProviderResponse>
+
+    @GET("tv/{series_id}/watch/providers")
+    suspend fun getTvWatchProviders(@Path("series_id") seriesId: Int): Response<WatchProviderResponse>
 
     @GET("genre/movie/list")
     suspend fun getMovieGenres(): Response<GenreListResponse>
