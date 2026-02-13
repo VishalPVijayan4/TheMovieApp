@@ -114,6 +114,11 @@ class UserRepositoryImpl(
         return remoteDataSource.fetchTrendingMovies()
     }
 
+
+    override suspend fun fetchMoviesByCategory(category: String): List<Movie>? {
+        return movieRemoteDataSource.fetchMoviesByCategory(category)
+    }
+
     override suspend fun fetchMovieDetails(movieId: Int): Movie? {
         return remoteDataSource.fetchMovieDetails(movieId)
     }
