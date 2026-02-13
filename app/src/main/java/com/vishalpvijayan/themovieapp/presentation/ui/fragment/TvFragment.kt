@@ -8,11 +8,13 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.vishalpvijayan.themovieapp.databinding.FragmentTvBinding
 import com.vishalpvijayan.themovieapp.databinding.LayoutDashboardSectionBinding
 import com.vishalpvijayan.themovieapp.presentation.ui.adapter.BannerAdapter
 import com.vishalpvijayan.themovieapp.presentation.ui.adapter.MovieAdapter
+import com.vishalpvijayan.themovieapp.presentation.ui.adapter.ViewMoreAdapter
 import com.vishalpvijayan.themovieapp.presentation.viewmodel.SectionState
 import com.vishalpvijayan.themovieapp.presentation.viewmodel.TvViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -43,6 +45,7 @@ class TvFragment : Fragment() {
             findNavController().navigate(action)
         }
         binding.vpTvCarousel.adapter = bannerAdapter
+        binding.vpTvCarousel.offscreenPageLimit = 1
 
         airingAdapter = createAdapter()
         onAirAdapter = createAdapter()
@@ -68,13 +71,12 @@ class TvFragment : Fragment() {
 
     private fun setupSection(section: LayoutDashboardSectionBinding, adapter: MovieAdapter, category: String) {
         section.rvMovies.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-        section.rvMovies.adapter = adapter
-        section.btnReload.setOnClickListener { viewModel.reloadSection(category) }
-        section.btnLoadMore.setOnClickListener { viewModel.loadMore(category) }
-        section.btnViewMore.setOnClickListener {
+        val viewMoreAdapter = ViewMoreAdapter {
             val action = TvFragmentDirections.actionTvFragmentToMovieListFragment(category, section.tvSectionTitle.text.toString())
             findNavController().navigate(action)
         }
+        section.rvMovies.adapter = ConcatAdapter(adapter, viewMoreAdapter)
+        section.btnReload.setOnClickListener { viewModel.reloadSection(category) }
     }
 
     private fun renderSection(section: LayoutDashboardSectionBinding, adapter: MovieAdapter, state: SectionState?) {
@@ -83,7 +85,7 @@ class TvFragment : Fragment() {
         section.sectionLoading.isVisible = state.isLoading
         section.errorContainer.isVisible = !state.error.isNullOrBlank()
         section.tvError.text = state.error
-        adapter.submitList(viewModel.visibleMovies(state))
+        adapter.submitList(state.movies)
     }
 
     private fun createAdapter(): MovieAdapter = MovieAdapter(onItemClick = { tv ->
