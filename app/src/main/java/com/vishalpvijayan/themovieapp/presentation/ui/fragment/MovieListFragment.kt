@@ -8,7 +8,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import com.vishalpvijayan.themovieapp.R
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.vishalpvijayan.themovieapp.databinding.FragmentMovieListBinding
 import com.vishalpvijayan.themovieapp.presentation.ui.adapter.MovieAdapter
 import com.vishalpvijayan.themovieapp.presentation.viewmodel.MovieViewModel
@@ -42,7 +42,8 @@ class MovieListFragment : Fragment() {
             findNavController().navigate(action)
         })
 
-        // Set the adapter for the RecyclerView
+        // Set RecyclerView layout manager + adapter
+        binding.rvMovieList.layoutManager = LinearLayoutManager(requireContext())
         binding.rvMovieList.adapter = adapter
 
         // Observe the movie list from the ViewModel
