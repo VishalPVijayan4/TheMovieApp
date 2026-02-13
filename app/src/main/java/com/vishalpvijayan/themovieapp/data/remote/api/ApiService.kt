@@ -31,41 +31,6 @@ interface ApiService {
 
     @POST("users")
     suspend fun addUser(@Body user: UserRequest): Response<UserResponse>
-    @GET("authentication/token/new")
-    suspend fun createRequestToken(): Response<AuthTokenResponse>
-
-    @POST("authentication/token/validate_with_login")
-    suspend fun validateWithLogin(@Body request: LoginRequest): Response<AuthTokenResponse>
-
-    @POST("authentication/session/new")
-    suspend fun createSession(@Body request: SessionRequest): Response<SessionResponse>
-
-    @retrofit2.http.HTTP(method = "DELETE", path = "authentication/session", hasBody = true)
-    suspend fun deleteSession(@Body request: DeleteSessionRequest): Response<TmdbStatusResponse>
-
-    @GET("authentication/token/new")
-    suspend fun createRequestToken(): Response<AuthTokenResponse>
-
-    @POST("authentication/token/validate_with_login")
-    suspend fun validateWithLogin(@Body request: LoginRequest): Response<AuthTokenResponse>
-
-    @POST("authentication/session/new")
-    suspend fun createSession(@Body request: SessionRequest): Response<SessionResponse>
-
-    @retrofit2.http.HTTP(method = "DELETE", path = "authentication/session", hasBody = true)
-    suspend fun deleteSession(@Body request: DeleteSessionRequest): Response<TmdbStatusResponse>
-
-    @GET("authentication/token/new")
-    suspend fun createRequestToken(): Response<AuthTokenResponse>
-
-    @POST("authentication/token/validate_with_login")
-    suspend fun validateWithLogin(@Body request: LoginRequest): Response<AuthTokenResponse>
-
-    @POST("authentication/session/new")
-    suspend fun createSession(@Body request: SessionRequest): Response<SessionResponse>
-
-    @retrofit2.http.HTTP(method = "DELETE", path = "authentication/session", hasBody = true)
-    suspend fun deleteSession(@Body request: DeleteSessionRequest): Response<TmdbStatusResponse>
 
     @GET("authentication/token/new")
     suspend fun createRequestToken(): Response<AuthTokenResponse>
