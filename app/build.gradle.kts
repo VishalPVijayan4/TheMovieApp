@@ -129,6 +129,7 @@ dependencies {
     implementation("androidx.appcompat:appcompat:$appcompat")
     implementation("com.google.android.material:material:$material")
     implementation("androidx.constraintlayout:constraintlayout:$constraintlayout")
+    implementation("com.facebook.shimmer:shimmer:0.5.0")
 
 //    implementation("com.github.Romancha:android-material-play-pause-view-button:2.3")
 

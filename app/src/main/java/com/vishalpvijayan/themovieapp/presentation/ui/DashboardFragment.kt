@@ -8,12 +8,14 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.vishalpvijayan.themovieapp.databinding.FragmentDashboardBinding
 import com.vishalpvijayan.themovieapp.databinding.LayoutDashboardSectionBinding
 import com.vishalpvijayan.themovieapp.presentation.ui.adapter.BannerAdapter
 import com.vishalpvijayan.themovieapp.presentation.ui.adapter.MovieAdapter
+import com.vishalpvijayan.themovieapp.presentation.ui.adapter.ViewMoreAdapter
 import com.vishalpvijayan.themovieapp.presentation.viewmodel.AuthViewModel
 import com.vishalpvijayan.themovieapp.presentation.viewmodel.DashboardViewModel
 import com.vishalpvijayan.themovieapp.presentation.viewmodel.SectionState
@@ -49,6 +51,8 @@ class DashboardFragment : Fragment() {
             findNavController().navigate(DashboardFragmentDirections.actionDashboardScreenToMovieDetailFragment(movie.id))
         }
         binding.vpMovieCarousel.adapter = bannerAdapter
+        binding.vpMovieCarousel.offscreenPageLimit = 1
+        binding.vpMovieCarousel.clipToPadding = true
 
         nowPlayingAdapter = createAdapter()
         popularAdapter = createAdapter()
@@ -60,8 +64,7 @@ class DashboardFragment : Fragment() {
         setupSection(binding.sectionTopRated, topRatedAdapter, "top_rated")
         setupSection(binding.sectionUpcoming, upcomingAdapter, "upcoming")
 
-        binding.btnLogout.setOnClickListener { authViewModel.logout() }
-        binding.ivAvatar.setOnClickListener {
+        binding.profileHeaderCard.setOnClickListener {
             findNavController().navigate(DashboardFragmentDirections.actionDashboardScreenToProfileFragment())
         }
 
@@ -93,29 +96,25 @@ class DashboardFragment : Fragment() {
 
     private fun setupSection(section: LayoutDashboardSectionBinding, adapter: MovieAdapter, category: String) {
         section.rvMovies.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-        section.rvMovies.adapter = adapter
-        section.btnReload.setOnClickListener { dashboardViewModel.reloadSection(category) }
-        section.btnLoadMore.setOnClickListener { dashboardViewModel.loadMore(category) }
-        section.btnViewMore.setOnClickListener {
+        val viewMoreAdapter = ViewMoreAdapter {
             val title = section.tvSectionTitle.text.toString()
             findNavController().navigate(
                 DashboardFragmentDirections.actionDashboardScreenToMovieListFragment(category, title)
             )
         }
+        section.rvMovies.adapter = ConcatAdapter(adapter, viewMoreAdapter)
+        section.btnReload.setOnClickListener { dashboardViewModel.reloadSection(category) }
     }
 
     private fun renderSection(section: LayoutDashboardSectionBinding, adapter: MovieAdapter, state: SectionState?) {
         state ?: return
         section.tvSectionTitle.text = state.title
-        section.sectionLoading.isVisible = state.isLoading
+        section.shimmerContainer.isVisible = state.isLoading
         section.errorContainer.isVisible = !state.error.isNullOrBlank()
         section.tvError.text = state.error
-        adapter.submitList(dashboardViewModel.visibleMovies(state.category, state))
-
-        if (state.isLoading) {
-            section.sectionLoading.alpha = 0f
-            section.sectionLoading.animate().alpha(1f).setDuration(350).start()
-        }
+        section.rvMovies.isVisible = !state.isLoading && state.error.isNullOrBlank()
+        if (state.isLoading) section.shimmerContainer.startShimmer() else section.shimmerContainer.stopShimmer()
+        adapter.submitList(state.movies)
     }
 
     private fun createAdapter(): MovieAdapter = MovieAdapter(onItemClick = { movie ->
