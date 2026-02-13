@@ -22,15 +22,34 @@ class TrailerPlayerFragment : Fragment() {
     @SuppressLint("SetJavaScriptEnabled")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         val trailerKey = arguments?.getString("trailerKey").orEmpty()
         binding.webTrailer.settings.javaScriptEnabled = true
+        binding.webTrailer.settings.mediaPlaybackRequiresUserGesture = false
         binding.webTrailer.webChromeClient = WebChromeClient()
+
         val html = """
-            <html><body style=\"margin:0;background:black;\">
-            <iframe width=\"100%\" height=\"100%\" src=\"https://www.youtube.com/embed/$trailerKey?autoplay=1\" frameborder=\"0\" allowfullscreen></iframe>
-            </body></html>
+            <html>
+              <body style="margin:0;background:black;">
+                <iframe
+                  width="100%"
+                  height="100%"
+                  src="https://www.youtube.com/embed/$trailerKey?autoplay=1&playsinline=1"
+                  frameborder="0"
+                  allow="autoplay; encrypted-media; picture-in-picture"
+                  allowfullscreen>
+                </iframe>
+              </body>
+            </html>
         """.trimIndent()
-        binding.webTrailer.loadData(html, "text/html", "utf-8")
+
+        binding.webTrailer.loadDataWithBaseURL(
+            "https://www.youtube.com",
+            html,
+            "text/html",
+            "utf-8",
+            null
+        )
     }
 
     override fun onDestroyView() {
