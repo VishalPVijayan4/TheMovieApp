@@ -22,7 +22,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:visibility="gone"
-            app:indeterminateTint="@color/prime_accent" />
+            android:indeterminateTint="@color/prime_accent" />
 
         <LinearLayout
             android:id="@+id/errorContainer"
