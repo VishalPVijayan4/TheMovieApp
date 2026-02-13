@@ -18,8 +18,8 @@ class MovieAdapter(
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(movie: Movie) {
-            binding.titleTextView.text = movie.title
-            binding.ratingTextView.text = "Rating: ${movie.vote_average ?: "N/A"}"
+            binding.titleTextView.text = movie.title ?: "Untitled"
+            binding.ratingTextView.text = "⭐ ${movie.vote_average?.let { String.format("%.1f", it) } ?: "N/A"}"
             val posterUrl = "https://image.tmdb.org/t/p/w500${movie.poster_path}"
 
             // Load image using Glide

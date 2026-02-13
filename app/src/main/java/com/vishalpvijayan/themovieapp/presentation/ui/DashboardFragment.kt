@@ -1,60 +1,120 @@
 package com.vishalpvijayan.themovieapp.presentation.ui
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.vishalpvijayan.themovieapp.R
+import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.Glide
+import com.vishalpvijayan.themovieapp.databinding.FragmentDashboardBinding
+import com.vishalpvijayan.themovieapp.databinding.LayoutDashboardSectionBinding
+import com.vishalpvijayan.themovieapp.presentation.ui.adapter.MovieAdapter
+import com.vishalpvijayan.themovieapp.presentation.viewmodel.AuthViewModel
+import com.vishalpvijayan.themovieapp.presentation.viewmodel.DashboardViewModel
+import com.vishalpvijayan.themovieapp.presentation.viewmodel.SectionState
+import dagger.hilt.android.AndroidEntryPoint
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [DashboardFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
+@AndroidEntryPoint
 class DashboardFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
+    private var _binding: FragmentDashboardBinding? = null
+    private val binding get() = _binding!!
+    private val authViewModel: AuthViewModel by viewModels()
+    private val dashboardViewModel: DashboardViewModel by viewModels()
+
+    private lateinit var nowPlayingAdapter: MovieAdapter
+    private lateinit var popularAdapter: MovieAdapter
+    private lateinit var topRatedAdapter: MovieAdapter
+    private lateinit var upcomingAdapter: MovieAdapter
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = FragmentDashboardBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        nowPlayingAdapter = createAdapter()
+        popularAdapter = createAdapter()
+        topRatedAdapter = createAdapter()
+        upcomingAdapter = createAdapter()
+
+        setupSection(binding.sectionNowPlaying, nowPlayingAdapter, "now_playing")
+        setupSection(binding.sectionPopular, popularAdapter, "popular")
+        setupSection(binding.sectionTopRated, topRatedAdapter, "top_rated")
+        setupSection(binding.sectionUpcoming, upcomingAdapter, "upcoming")
+
+        binding.btnLogout.setOnClickListener { authViewModel.logout() }
+        binding.ivAvatar.setOnClickListener {
+            findNavController().navigate(DashboardFragmentDirections.actionDashboardScreenToProfileFragment())
+        }
+
+        authViewModel.loggedIn.observe(viewLifecycleOwner) { loggedIn ->
+            if (!loggedIn) {
+                findNavController().navigate(DashboardFragmentDirections.actionDashboardScreenToLoginFragment())
+            }
+        }
+
+        dashboardViewModel.sections.observe(viewLifecycleOwner) { sections ->
+            renderSection(binding.sectionNowPlaying, nowPlayingAdapter, sections["now_playing"])
+            renderSection(binding.sectionPopular, popularAdapter, sections["popular"])
+            renderSection(binding.sectionTopRated, topRatedAdapter, sections["top_rated"])
+            renderSection(binding.sectionUpcoming, upcomingAdapter, sections["upcoming"])
+        }
+
+        dashboardViewModel.accountDetails.observe(viewLifecycleOwner) { account ->
+            val name = account?.name?.ifBlank { account.username ?: "User" } ?: "User"
+            binding.tvWelcome.text = "Welcome back, $name"
+            val avatarPath = account?.avatar?.tmdb?.avatar_path
+            val avatarUrl = avatarPath?.let { "https://image.tmdb.org/t/p/w200$it" }
+            Glide.with(this).load(avatarUrl).circleCrop().into(binding.ivAvatar)
         }
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_dashboard, container, false)
+    private fun setupSection(section: LayoutDashboardSectionBinding, adapter: MovieAdapter, category: String) {
+        section.rvMovies.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+        section.rvMovies.adapter = adapter
+        section.btnReload.setOnClickListener { dashboardViewModel.reloadSection(category) }
+        section.btnLoadMore.setOnClickListener { dashboardViewModel.loadMore(category) }
+        section.btnViewMore.setOnClickListener {
+            val title = section.tvSectionTitle.text.toString()
+            findNavController().navigate(
+                DashboardFragmentDirections.actionDashboardScreenToMovieListFragment(category, title)
+            )
+        }
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment DashboardFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            DashboardFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
+    private fun renderSection(section: LayoutDashboardSectionBinding, adapter: MovieAdapter, state: SectionState?) {
+        state ?: return
+        section.tvSectionTitle.text = state.title
+        section.sectionLoading.isVisible = state.isLoading
+        section.errorContainer.isVisible = !state.error.isNullOrBlank()
+        section.tvError.text = state.error
+        adapter.submitList(dashboardViewModel.visibleMovies(state.category, state))
+
+        if (state.isLoading) {
+            section.sectionLoading.alpha = 0f
+            section.sectionLoading.animate().alpha(1f).setDuration(350).start()
+        }
+    }
+
+    private fun createAdapter(): MovieAdapter = MovieAdapter(onItemClick = { movie ->
+        findNavController().navigate(
+            DashboardFragmentDirections.actionDashboardScreenToMovieDetailFragment(movie.id)
+        )
+    })
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

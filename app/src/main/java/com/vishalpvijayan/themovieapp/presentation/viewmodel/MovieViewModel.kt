@@ -10,7 +10,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-
 @HiltViewModel
 class MovieViewModel @Inject constructor(
     private val userRepository: UserRepository
@@ -22,10 +21,24 @@ class MovieViewModel @Inject constructor(
     private val _selectedMovie = MutableLiveData<Movie>()
     val selectedMovie: LiveData<Movie> = _selectedMovie
 
-    fun loadTrendingMovies() {
+    private var currentCategory: String = "now_playing"
+    private var page: Int = 1
+
+    fun loadMovies(category: String) {
+        currentCategory = category
+        page = 1
         viewModelScope.launch {
-            val movies = userRepository.fetchTrendingMovies()
-            _trendingMovies.postValue(movies ?: emptyList())
+            val movies = userRepository.fetchMoviesByCategory(category, page = 1)
+            _trendingMovies.postValue(movies?.take(15) ?: emptyList())
+        }
+    }
+
+    fun loadMoreMovies() {
+        viewModelScope.launch {
+            page += 1
+            val more = userRepository.fetchMoviesByCategory(currentCategory, page = page)
+            val merged = (_trendingMovies.value.orEmpty() + (more?.take(15) ?: emptyList())).distinctBy { it.id }
+            _trendingMovies.postValue(merged)
         }
     }
 
@@ -36,8 +49,7 @@ class MovieViewModel @Inject constructor(
     fun loadMovieDetails(movieId: Int) {
         viewModelScope.launch {
             val movie = userRepository.fetchMovieDetails(movieId)
-            _selectedMovie.postValue(movie!!)
+            movie?.let { _selectedMovie.postValue(it) }
         }
     }
 }
-

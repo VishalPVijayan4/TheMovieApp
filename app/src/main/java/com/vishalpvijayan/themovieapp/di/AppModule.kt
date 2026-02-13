@@ -53,8 +53,8 @@ object AppModule {
 
     @Provides
     @Singleton
-    @ReqresApi
-    fun provideRetrofit(@Named("ReqresRetrofit") okHttpClient: OkHttpClient): Retrofit {
+    @Named("ReqresRetrofit")
+    fun provideRetrofit(@Named("ReqresOkHttp") okHttpClient: OkHttpClient): Retrofit {
         return Retrofit.Builder()
             .baseUrl("https://reqres.in/")
             .client(okHttpClient)
@@ -64,10 +64,13 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideUserRemoteDataSource(apiService: ApiService): UserRemoteDataSource {
+    fun provideUserRemoteDataSource(
+        @ReqresApi apiService: ApiService,
+        @TmdbApi tmdbApiService: ApiService
+    ): UserRemoteDataSource {
         return UserRemoteDataSource(
             apiService,
-            tmdbApiService = TODO()
+            tmdbApiService = tmdbApiService
         )
     }
 
@@ -118,4 +121,3 @@ object AppModule {
         return UserRepositoryImpl(remoteDataSource, localDataSource, movieRemoteDataSource, workManager)
     }
 }
-

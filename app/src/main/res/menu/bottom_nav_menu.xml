@@ -1,31 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/popularMovieScreen"
-        android:icon="@drawable/ic_splash"
-        app:showAsAction="ifRoom"
-        android:title="Movies"/>
+        android:id="@+id/dashboardScreen"
+        android:icon="@drawable/ic_movies"
+        android:title="Home" />
 
     <item
-        android:id="@+id/searchScreen"
-        android:icon="@drawable/ic_splash"
-        app:showAsAction="ifRoom"
-        android:title="search"
-        />
+        android:id="@+id/movieListFragment"
+        android:icon="@drawable/ic_movies"
+        android:title="Movies" />
 
     <item
-        android:id="@+id/watchlistScreen"
-        android:icon="@drawable/ic_splash"
-        app:showAsAction="ifRoom"
-        android:title="watchlist"
-        />
+        android:id="@+id/tvFragment"
+        android:icon="@drawable/ic_movies"
+        android:title="TV" />
 
     <item
-        android:id="@+id/favoriteScreen"
-        android:icon="@drawable/ic_splash"
-        app:showAsAction="ifRoom"
-        android:title="favorite"
-        />
+        android:id="@+id/searchFragment"
+        android:icon="@drawable/ic_movies"
+        android:title="Search" />
+
+    <item
+        android:id="@+id/profileFragment"
+        android:icon="@drawable/ic_movies"
+        android:title="Profile" />
+
 </menu>

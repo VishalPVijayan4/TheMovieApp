@@ -4,26 +4,35 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.vishalpvijayan.themovieapp.R
+import com.vishalpvijayan.themovieapp.utilis.SessionManager
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @SuppressLint("CustomSplashScreen")
+@AndroidEntryPoint
 class SplashFragment : Fragment() {
+
+    @Inject
+    lateinit var sessionManager: SessionManager
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         Handler(Looper.getMainLooper()).postDelayed({
-            val action = SplashFragmentDirections.actionSplashScreenToUserListFragment()
+            val action = if (sessionManager.isLoggedIn()) {
+                SplashFragmentDirections.actionSplashScreenToDashboardScreen()
+            } else {
+                SplashFragmentDirections.actionSplashScreenToLoginFragment()
+            }
             findNavController().navigate(action)
-        }, 2000)
+        }, 1500)
         return inflater.inflate(R.layout.fragment_splash, container, false)
     }
-
 }
-
