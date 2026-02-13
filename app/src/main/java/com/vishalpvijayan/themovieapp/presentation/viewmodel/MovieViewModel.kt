@@ -21,24 +21,27 @@ class MovieViewModel @Inject constructor(
     private val _selectedMovie = MutableLiveData<Movie>()
     val selectedMovie: LiveData<Movie> = _selectedMovie
 
+    private val _loading = MutableLiveData(false)
+    val loading: LiveData<Boolean> = _loading
+
+    private val _error = MutableLiveData<String?>(null)
+    val error: LiveData<String?> = _error
+
     private var currentCategory: String = "now_playing"
-    private var page: Int = 1
 
-    fun loadMovies(category: String) {
+    fun loadMovies(category: String = currentCategory) {
         currentCategory = category
-        page = 1
         viewModelScope.launch {
-            val movies = userRepository.fetchMoviesByCategory(category, page = 1)
-            _trendingMovies.postValue(movies?.take(15) ?: emptyList())
-        }
-    }
-
-    fun loadMoreMovies() {
-        viewModelScope.launch {
-            page += 1
-            val more = userRepository.fetchMoviesByCategory(currentCategory, page = page)
-            val merged = (_trendingMovies.value.orEmpty() + (more?.take(15) ?: emptyList())).distinctBy { it.id }
-            _trendingMovies.postValue(merged)
+            _loading.postValue(true)
+            _error.postValue(null)
+            runCatching {
+                userRepository.fetchMoviesByCategory(category, page = 1)
+            }.onSuccess { movies ->
+                _trendingMovies.postValue(movies?.take(30) ?: emptyList())
+            }.onFailure {
+                _error.postValue("Could not load list. Go for a retry.")
+            }
+            _loading.postValue(false)
         }
     }
 

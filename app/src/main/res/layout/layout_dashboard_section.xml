@@ -38,14 +38,16 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:text="Could not load this list. Go for a retry."
                 android:textColor="@android:color/holo_red_light"
                 android:textSize="13sp" />
 
-            <Button
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnReload"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Reload" />
+                android:text="Retry"
+                app:backgroundTint="@color/prime_card" />
         </LinearLayout>
 
         <androidx.recyclerview.widget.RecyclerView
@@ -55,27 +57,6 @@
             android:layout_marginTop="8dp"
             android:orientation="horizontal"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:gravity="end"
-            android:orientation="horizontal">
-
-            <Button
-                android:id="@+id/btnLoadMore"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Load more" />
-
-            <Button
-                android:id="@+id/btnViewMore"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:text="View more" />
-        </LinearLayout>
 
     </LinearLayout>
 </layout>
