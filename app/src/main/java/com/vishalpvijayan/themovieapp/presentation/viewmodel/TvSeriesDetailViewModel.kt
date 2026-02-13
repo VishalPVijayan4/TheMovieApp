@@ -1,0 +1,60 @@
+package com.vishalpvijayan.themovieapp.presentation.viewmodel
+
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.vishalpvijayan.themovieapp.data.remote.api.ApiService
+import com.vishalpvijayan.themovieapp.data.remote.model.EpisodeGroupItem
+import com.vishalpvijayan.themovieapp.data.remote.model.Movie
+import com.vishalpvijayan.themovieapp.data.remote.model.TvSeriesDetail
+import com.vishalpvijayan.themovieapp.data.remote.model.VideoItem
+import com.vishalpvijayan.themovieapp.di.TmdbApi
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
+import javax.inject.Inject
+
+@HiltViewModel
+class TvSeriesDetailViewModel @Inject constructor(
+    @TmdbApi private val apiService: ApiService
+) : ViewModel() {
+
+    private val _detail = MutableLiveData<TvSeriesDetail?>()
+    val detail: LiveData<TvSeriesDetail?> = _detail
+
+    private val _videos = MutableLiveData<List<VideoItem>>(emptyList())
+    val videos: LiveData<List<VideoItem>> = _videos
+
+    private val _episodeGroups = MutableLiveData<List<EpisodeGroupItem>>(emptyList())
+    val episodeGroups: LiveData<List<EpisodeGroupItem>> = _episodeGroups
+
+    private val _similar = MutableLiveData<List<Movie>>(emptyList())
+    val similar: LiveData<List<Movie>> = _similar
+
+    private val _loading = MutableLiveData(false)
+    val loading: LiveData<Boolean> = _loading
+
+    private val _error = MutableLiveData<String?>(null)
+    val error: LiveData<String?> = _error
+
+    fun load(seriesId: Int) {
+        viewModelScope.launch {
+            _loading.postValue(true)
+            _error.postValue(null)
+            runCatching {
+                val detailResp = apiService.getTvSeriesDetails(seriesId)
+                val videosResp = apiService.getTvSeriesVideos(seriesId)
+                val groupsResp = apiService.getTvEpisodeGroups(seriesId)
+                val similarResp = apiService.getSimilarTvSeries(seriesId)
+
+                _detail.postValue(detailResp.body())
+                _videos.postValue(videosResp.body()?.results.orEmpty())
+                _episodeGroups.postValue(groupsResp.body()?.results.orEmpty())
+                _similar.postValue(similarResp.body()?.results.orEmpty().take(15))
+            }.onFailure {
+                _error.postValue("Failed to load TV details")
+            }
+            _loading.postValue(false)
+        }
+    }
+}
