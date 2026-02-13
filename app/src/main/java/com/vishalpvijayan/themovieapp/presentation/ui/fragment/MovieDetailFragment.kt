@@ -18,7 +18,7 @@ class MovieDetailFragment : Fragment() {
     private var _binding: FragmentMovieDetailBinding? = null
     private val binding get() = _binding!!
     private val viewModel: MovieDetailViewModel by viewModels()
-    private val args: MovieDetailFragmentArgs by navArgs() // SafeArgs
+    private val args: MovieDetailFragmentArgs by navArgs()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -34,14 +34,23 @@ class MovieDetailFragment : Fragment() {
 
         viewModel.movie.observe(viewLifecycleOwner) { movie ->
             movie?.let {
-                binding.movieTitle.text = it.title
-                binding.movieRating.text = "Rating: ${it.vote_average ?: "N/A"}"
+                binding.movieTitle.text = it.title ?: "Untitled"
+                binding.movieTagline.text = it.tagline ?: ""
                 binding.movieDescription.text = it.overview ?: "No description available"
 
-                val imageUrl = "https://image.tmdb.org/t/p/w500${it.poster_path}"
-                Glide.with(requireContext())
-                    .load(imageUrl)
-                    .into(binding.moviePoster)
+                val meta = listOfNotNull(
+                    it.release_date,
+                    it.runtime?.let { runtime -> "${runtime} min" },
+                    it.vote_average?.let { rating -> "⭐ %.1f".format(rating) },
+                    it.original_language?.uppercase()
+                ).joinToString(" • ")
+                binding.movieMeta.text = meta
+                binding.movieGenres.text = it.genres?.joinToString("  •  ") { genre -> genre.name }.orEmpty()
+
+                val posterUrl = "https://image.tmdb.org/t/p/w500${it.poster_path}"
+                val backdropUrl = "https://image.tmdb.org/t/p/w780${it.backdrop_path}"
+                Glide.with(requireContext()).load(posterUrl).into(binding.moviePoster)
+                Glide.with(requireContext()).load(backdropUrl).into(binding.movieBackdrop)
             }
         }
 

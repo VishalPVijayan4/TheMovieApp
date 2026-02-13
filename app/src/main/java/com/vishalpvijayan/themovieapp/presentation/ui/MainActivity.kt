@@ -26,7 +26,7 @@ class MainActivity : AppCompatActivity() {
 
         navController.addOnDestinationChangedListener { _, destination, _ ->
             when (destination.id) {
-                R.id.splashScreen -> {
+                R.id.splashScreen, R.id.loginFragment -> {
                     binding.bottomNavView.visibility = View.GONE
                 }
 

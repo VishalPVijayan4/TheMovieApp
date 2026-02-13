@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
-
-
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/prime_background"
         android:padding="16dp"
         tools:context=".presentation.ui.fragment.MovieDetailFragment">
 
@@ -17,9 +15,17 @@
             android:orientation="vertical">
 
             <ImageView
-                android:id="@+id/moviePoster"
+                android:id="@+id/movieBackdrop"
                 android:layout_width="match_parent"
-                android:layout_height="300dp"
+                android:layout_height="200dp"
+                android:layout_marginBottom="12dp"
+                android:scaleType="centerCrop" />
+
+            <ImageView
+                android:id="@+id/moviePoster"
+                android:layout_width="160dp"
+                android:layout_height="240dp"
+                android:layout_gravity="center_horizontal"
                 android:layout_marginBottom="16dp"
                 android:scaleType="centerCrop" />
 
@@ -27,38 +33,55 @@
                 android:id="@+id/movieTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:text="Movie Title"
+                android:textColor="@color/prime_text"
                 android:textSize="24sp"
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/movieRating"
+                android:id="@+id/movieTagline"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:text="Rating: 7.5"
-                android:textSize="16sp" />
+                android:layout_marginTop="6dp"
+                android:textColor="@color/prime_text_secondary"
+                android:textStyle="italic" />
+
+            <TextView
+                android:id="@+id/movieMeta"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:textColor="@color/prime_text"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/movieGenres"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:textColor="@color/prime_text_secondary"
+                android:textSize="14sp" />
 
             <TextView
                 android:id="@+id/movieDescription"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                android:text="Movie description goes here"
-                android:textSize="16sp" />
+                android:layout_marginTop="12dp"
+                android:textColor="@color/prime_text"
+                android:textSize="15sp" />
 
             <ProgressBar
                 android:id="@+id/progressBar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:layout_marginTop="16dp"
                 android:visibility="gone" />
 
             <TextView
                 android:id="@+id/errorTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
                 android:textColor="@android:color/holo_red_dark"
                 android:textSize="14sp"
                 android:visibility="gone" />
