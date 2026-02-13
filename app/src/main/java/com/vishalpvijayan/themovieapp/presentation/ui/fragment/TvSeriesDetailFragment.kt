@@ -11,6 +11,7 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.vishalpvijayan.themovieapp.databinding.FragmentTvSeriesDetailBinding
+import com.vishalpvijayan.themovieapp.presentation.ui.adapter.CreditsAdapter
 import com.vishalpvijayan.themovieapp.presentation.ui.adapter.MovieAdapter
 import com.vishalpvijayan.themovieapp.presentation.viewmodel.TvSeriesDetailViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -23,6 +24,7 @@ class TvSeriesDetailFragment : Fragment() {
     private val args: TvSeriesDetailFragmentArgs by navArgs()
     private val viewModel: TvSeriesDetailViewModel by viewModels()
     private lateinit var similarAdapter: MovieAdapter
+    private lateinit var creditsAdapter: CreditsAdapter
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentTvSeriesDetailBinding.inflate(inflater, container, false)
@@ -36,6 +38,10 @@ class TvSeriesDetailFragment : Fragment() {
         })
         binding.rvSimilarTv.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
         binding.rvSimilarTv.adapter = similarAdapter
+
+        creditsAdapter = CreditsAdapter()
+        binding.rvCredits.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+        binding.rvCredits.adapter = creditsAdapter
 
         viewModel.load(args.seriesId)
 
@@ -68,8 +74,19 @@ class TvSeriesDetailFragment : Fragment() {
             similarAdapter.submitList(it)
         }
 
+        viewModel.credits.observe(viewLifecycleOwner) { creditsAdapter.submitList(it) }
+
         viewModel.watchProvidersText.observe(viewLifecycleOwner) {
             binding.tvWatchProviders.text = it
+        }
+
+        viewModel.trailerKey.observe(viewLifecycleOwner) { key ->
+            binding.btnPlayTrailer.visibility = if (key.isNullOrBlank()) View.GONE else View.VISIBLE
+            binding.btnPlayTrailer.setOnClickListener {
+                if (!key.isNullOrBlank()) {
+                    findNavController().navigate(TvSeriesDetailFragmentDirections.actionTvSeriesDetailFragmentToTrailerPlayerFragment(key))
+                }
+            }
         }
 
         viewModel.watchProvidersLink.observe(viewLifecycleOwner) { link ->

@@ -1,6 +1,8 @@
 package com.vishalpvijayan.themovieapp.presentation.ui
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
@@ -42,6 +44,11 @@ class MainActivity : AppCompatActivity() {
             binding.bottomNavView.visibility = if (hideBars || !isTopLevel) View.GONE else View.VISIBLE
             binding.topToolbar.visibility = if (hideBars || isTopLevel) View.GONE else View.VISIBLE
             binding.topToolbar.title = destination.label
+
+            binding.screenTransitionLoader.visibility = View.VISIBLE
+            Handler(Looper.getMainLooper()).postDelayed({
+                binding.screenTransitionLoader.visibility = View.GONE
+            }, 350)
         }
     }
 }

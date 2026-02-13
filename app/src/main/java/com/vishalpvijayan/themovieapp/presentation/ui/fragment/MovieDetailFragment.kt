@@ -11,6 +11,7 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.vishalpvijayan.themovieapp.databinding.FragmentMovieDetailBinding
+import com.vishalpvijayan.themovieapp.presentation.ui.adapter.CreditsAdapter
 import com.vishalpvijayan.themovieapp.presentation.ui.adapter.MovieAdapter
 import com.vishalpvijayan.themovieapp.presentation.viewmodel.MovieDetailViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -23,6 +24,7 @@ class MovieDetailFragment : Fragment() {
     private val viewModel: MovieDetailViewModel by viewModels()
     private val args: MovieDetailFragmentArgs by navArgs()
     private lateinit var similarAdapter: MovieAdapter
+    private lateinit var creditsAdapter: CreditsAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -41,6 +43,10 @@ class MovieDetailFragment : Fragment() {
         })
         binding.rvSimilarMovies.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
         binding.rvSimilarMovies.adapter = similarAdapter
+
+        creditsAdapter = CreditsAdapter()
+        binding.rvCredits.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+        binding.rvCredits.adapter = creditsAdapter
 
         viewModel.getMovieDetail(args.movieId)
 
@@ -75,6 +81,15 @@ class MovieDetailFragment : Fragment() {
             }
         }
 
+        viewModel.trailerKey.observe(viewLifecycleOwner) { key ->
+            binding.btnPlayTrailer.visibility = if (key.isNullOrBlank()) View.GONE else View.VISIBLE
+            binding.btnPlayTrailer.setOnClickListener {
+                if (!key.isNullOrBlank()) {
+                    findNavController().navigate(MovieDetailFragmentDirections.actionMovieDetailFragmentToTrailerPlayerFragment(key))
+                }
+            }
+        }
+
         viewModel.imagesInfo.observe(viewLifecycleOwner) {
             binding.movieImagesInfo.text = it
         }
@@ -91,6 +106,8 @@ class MovieDetailFragment : Fragment() {
                 }
             }
         }
+
+        viewModel.credits.observe(viewLifecycleOwner) { creditsAdapter.submitList(it) }
 
         viewModel.similarMovies.observe(viewLifecycleOwner) { similar ->
             similarAdapter.submitList(similar)

@@ -51,6 +51,7 @@
                 android:id="@+id/btnAbout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                app:backgroundTint="@color/prime_card"
                 android:layout_marginTop="18dp"
                 android:text="About" />
 
@@ -58,6 +59,7 @@
                 android:id="@+id/btnPrivacy"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                app:backgroundTint="@color/prime_card"
                 android:layout_marginTop="8dp"
                 android:text="Privacy Policy" />
 
@@ -65,6 +67,7 @@
                 android:id="@+id/btnContact"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                app:backgroundTint="@color/prime_card"
                 android:layout_marginTop="8dp"
                 android:text="Contact Developer (LinkedIn)" />
 

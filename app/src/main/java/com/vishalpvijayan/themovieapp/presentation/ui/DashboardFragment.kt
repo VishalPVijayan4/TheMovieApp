@@ -51,6 +51,7 @@ class DashboardFragment : Fragment() {
             findNavController().navigate(DashboardFragmentDirections.actionDashboardScreenToMovieDetailFragment(movie.id))
         }
         binding.vpMovieCarousel.adapter = bannerAdapter
+        binding.vpMovieCarousel.offscreenPageLimit = 1
 
         nowPlayingAdapter = createAdapter()
         popularAdapter = createAdapter()
@@ -110,7 +111,7 @@ class DashboardFragment : Fragment() {
         section.sectionLoading.isVisible = state.isLoading
         section.errorContainer.isVisible = !state.error.isNullOrBlank()
         section.tvError.text = state.error
-        adapter.submitList(dashboardViewModel.visibleMovies(state.category, state))
+        adapter.submitList(state.movies)
 
         if (state.isLoading) {
             section.sectionLoading.alpha = 0f

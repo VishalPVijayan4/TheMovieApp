@@ -45,6 +45,7 @@ class TvFragment : Fragment() {
             findNavController().navigate(action)
         }
         binding.vpTvCarousel.adapter = bannerAdapter
+        binding.vpTvCarousel.offscreenPageLimit = 1
 
         airingAdapter = createAdapter()
         onAirAdapter = createAdapter()
@@ -84,7 +85,7 @@ class TvFragment : Fragment() {
         section.sectionLoading.isVisible = state.isLoading
         section.errorContainer.isVisible = !state.error.isNullOrBlank()
         section.tvError.text = state.error
-        adapter.submitList(viewModel.visibleMovies(state))
+        adapter.submitList(state.movies)
     }
 
     private fun createAdapter(): MovieAdapter = MovieAdapter(onItemClick = { tv ->

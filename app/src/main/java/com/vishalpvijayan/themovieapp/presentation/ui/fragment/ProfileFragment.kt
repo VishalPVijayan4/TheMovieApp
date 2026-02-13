@@ -13,6 +13,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
+import com.vishalpvijayan.themovieapp.BuildConfig
 import com.vishalpvijayan.themovieapp.databinding.FragmentProfileBinding
 import com.vishalpvijayan.themovieapp.presentation.viewmodel.AuthViewModel
 import com.vishalpvijayan.themovieapp.presentation.viewmodel.ProfileViewModel
@@ -39,12 +40,24 @@ class ProfileFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         viewModel.loadProfile()
 
-        binding.tvVersion.text = "Version 1.0.0"
+        binding.tvVersion.text = "Version ${BuildConfig.VERSION_NAME}"
 
         binding.btnAbout.setOnClickListener {
             showScrollableDialog(
                 "About",
-                "TheMovieApp helps you discover trending movies and TV series, browse by genre, and explore details including cast videos and providers."
+                """The Movie App is a movie discovery application that allows users to browse trending movies and TV shows, search for titles, and view detailed information such as ratings, overview, release date, and cast.
+
+The app focuses on simplicity, speed, and clean UI rather than streaming or downloading content.
+
+Important distinction:
+👉 This app does NOT stream movies.
+
+This application uses The Movie Database (TMDB) API to fetch movie information such as ratings, posters, cast, and release details.
+
+TMDB is a community-driven online movie and TV database that provides developers access to structured film metadata through a public API.
+The API allows applications to programmatically retrieve movie data and images for display purposes.
+
+This app only displays publicly available information and does not host or stream any copyrighted content."""
             )
         }
 

@@ -18,6 +18,7 @@ import com.vishalpvijayan.themovieapp.data.remote.model.UserRequest
 import com.vishalpvijayan.themovieapp.data.remote.model.UserResponse
 import com.vishalpvijayan.themovieapp.data.remote.model.UsersResponse
 import com.vishalpvijayan.themovieapp.data.remote.model.WatchProviderResponse
+import com.vishalpvijayan.themovieapp.data.remote.model.CreditsResponse
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -136,8 +137,14 @@ interface ApiService {
     ): Response<MovieResponse>
 
 
+    @GET("movie/{movie_id}/credits")
+    suspend fun getMovieCredits(@Path("movie_id") movieId: Int): Response<CreditsResponse>
+
     @GET("movie/{movie_id}/watch/providers")
     suspend fun getMovieWatchProviders(@Path("movie_id") movieId: Int): Response<WatchProviderResponse>
+
+    @GET("tv/{series_id}/credits")
+    suspend fun getTvCredits(@Path("series_id") seriesId: Int): Response<CreditsResponse>
 
     @GET("tv/{series_id}/watch/providers")
     suspend fun getTvWatchProviders(@Path("series_id") seriesId: Int): Response<WatchProviderResponse>

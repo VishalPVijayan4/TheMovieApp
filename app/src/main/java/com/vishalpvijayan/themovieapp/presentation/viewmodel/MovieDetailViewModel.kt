@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.vishalpvijayan.themovieapp.data.remote.api.ApiService
 import com.vishalpvijayan.themovieapp.data.remote.model.Movie
+import com.vishalpvijayan.themovieapp.data.remote.model.CreditPerson
 import com.vishalpvijayan.themovieapp.data.remote.model.VideoItem
 import com.vishalpvijayan.themovieapp.di.TmdbApi
 import com.vishalpvijayan.themovieapp.domain.repository.UserRepository
@@ -37,6 +38,12 @@ class MovieDetailViewModel @Inject constructor(
     private val _imagesInfo = MutableLiveData<String>("")
     val imagesInfo: LiveData<String> = _imagesInfo
 
+    private val _credits = MutableLiveData<List<CreditPerson>>(emptyList())
+    val credits: LiveData<List<CreditPerson>> = _credits
+
+    private val _trailerKey = MutableLiveData<String?>(null)
+    val trailerKey: LiveData<String?> = _trailerKey
+
     private val _watchProvidersText = MutableLiveData("Watch providers unavailable")
     val watchProvidersText: LiveData<String> = _watchProvidersText
     private val _watchProvidersLink = MutableLiveData<String?>(null)
@@ -51,7 +58,12 @@ class MovieDetailViewModel @Inject constructor(
                 _error.value = null
 
                 val videosResponse = tmdbApiService.getMovieVideos(movieId)
-                _videos.postValue(videosResponse.body()?.results.orEmpty())
+                val videos = videosResponse.body()?.results.orEmpty()
+                _videos.postValue(videos)
+                _trailerKey.postValue(videos.firstOrNull { it.type == "Trailer" && it.site == "YouTube" }?.key)
+
+                val creditsResponse = tmdbApiService.getMovieCredits(movieId)
+                _credits.postValue(creditsResponse.body()?.cast.orEmpty().take(15))
 
                 val similarResponse = tmdbApiService.getSimilarMovies(movieId)
                 _similarMovies.postValue(similarResponse.body()?.results.orEmpty().take(15))

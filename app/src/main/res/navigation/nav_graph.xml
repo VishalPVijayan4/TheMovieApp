@@ -148,6 +148,13 @@
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right" />
+            <action
+            android:id="@+id/action_movieDetailFragment_to_trailerPlayerFragment"
+            app:destination="@id/trailerPlayerFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
     </fragment>
 
 
@@ -240,6 +247,13 @@
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right" />
+            <action
+            android:id="@+id/action_tvSeriesDetailFragment_to_trailerPlayerFragment"
+            app:destination="@id/trailerPlayerFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
     </fragment>
 
     <fragment
@@ -248,6 +262,16 @@
         android:label="Sign Up">
         <argument
             android:name="url"
+            app:argType="string" />
+    </fragment>
+
+
+    <fragment
+        android:id="@+id/trailerPlayerFragment"
+        android:name="com.vishalpvijayan.themovieapp.presentation.ui.fragment.TrailerPlayerFragment"
+        android:label="Trailer">
+        <argument
+            android:name="trailerKey"
             app:argType="string" />
     </fragment>
 
