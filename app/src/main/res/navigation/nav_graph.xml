@@ -100,6 +100,9 @@
         <argument
             android:name="movieId"
             app:argType="integer" />
+        <action
+            android:id="@+id/action_movieDetailFragment_self"
+            app:destination="@id/movieDetailFragment" />
     </fragment>
 
     <fragment
@@ -110,6 +113,9 @@
         <action
             android:id="@+id/action_tvFragment_to_movieListFragment"
             app:destination="@id/movieListFragment" />
+        <action
+            android:id="@+id/action_tvFragment_to_tvSeriesDetailFragment"
+            app:destination="@id/tvSeriesDetailFragment" />
     </fragment>
 
     <fragment
@@ -123,5 +129,19 @@
         android:name="com.vishalpvijayan.themovieapp.presentation.ui.fragment.ProfileFragment"
         android:label="Profile"
         tools:layout="@layout/fragment_profile" />
+
+
+    <fragment
+        android:id="@+id/tvSeriesDetailFragment"
+        android:name="com.vishalpvijayan.themovieapp.presentation.ui.fragment.TvSeriesDetailFragment"
+        android:label="TV Series Detail"
+        tools:layout="@layout/fragment_tv_series_detail">
+        <argument
+            android:name="seriesId"
+            app:argType="integer" />
+        <action
+            android:id="@+id/action_tvSeriesDetailFragment_self"
+            app:destination="@id/tvSeriesDetailFragment" />
+    </fragment>
 
 </navigation>

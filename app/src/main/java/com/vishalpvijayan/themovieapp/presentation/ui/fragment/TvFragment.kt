@@ -78,7 +78,10 @@ class TvFragment : Fragment() {
         adapter.submitList(viewModel.visibleMovies(state))
     }
 
-    private fun createAdapter(): MovieAdapter = MovieAdapter(onItemClick = { })
+    private fun createAdapter(): MovieAdapter = MovieAdapter(onItemClick = { tv ->
+        val action = TvFragmentDirections.actionTvFragmentToTvSeriesDetailFragment(tv.id)
+        findNavController().navigate(action)
+    })
 
     override fun onDestroyView() {
         super.onDestroyView()
