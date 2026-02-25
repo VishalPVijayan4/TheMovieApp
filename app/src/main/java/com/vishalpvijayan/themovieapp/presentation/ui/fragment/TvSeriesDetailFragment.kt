@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.vishalpvijayan.themovieapp.databinding.FragmentTvSeriesDetailBinding
@@ -39,11 +40,25 @@ class TvSeriesDetailFragment : Fragment() {
         binding.rvSimilarTv.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
         binding.rvSimilarTv.adapter = similarAdapter
 
-        creditsAdapter = CreditsAdapter()
+        creditsAdapter = CreditsAdapter { person ->
+            findNavController().navigate(TvSeriesDetailFragmentDirections.actionTvSeriesDetailFragmentToPersonDetailFragment(person.id))
+        }
         binding.rvCredits.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
         binding.rvCredits.adapter = creditsAdapter
 
         viewModel.load(args.seriesId)
+        binding.contentGroup.alpha = 0f
+
+        binding.btnFavorite.setOnClickListener {
+            viewModel.toggleFavorite(args.seriesId)
+        }
+
+        viewModel.favorite.observe(viewLifecycleOwner) {
+            binding.btnFavorite.setImageResource(
+                if (it) com.vishalpvijayan.themovieapp.R.drawable.ic_favorite_filled
+                else com.vishalpvijayan.themovieapp.R.drawable.ic_favorite_outline
+            )
+        }
 
         viewModel.detail.observe(viewLifecycleOwner) { d ->
             d ?: return@observe
@@ -99,7 +114,10 @@ class TvSeriesDetailFragment : Fragment() {
         }
 
         viewModel.loading.observe(viewLifecycleOwner) {
-            binding.progressBar.visibility = if (it) View.VISIBLE else View.GONE
+            binding.progressBar.isVisible = it
+            if (!it) {
+                binding.contentGroup.animate().alpha(1f).setDuration(220).start()
+            }
         }
 
         viewModel.error.observe(viewLifecycleOwner) {

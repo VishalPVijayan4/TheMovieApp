@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.vishalpvijayan.themovieapp.data.remote.api.ApiService
 import com.vishalpvijayan.themovieapp.data.remote.model.AccountDetails
+import com.vishalpvijayan.themovieapp.data.remote.model.Movie
 import com.vishalpvijayan.themovieapp.di.TmdbApi
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -22,11 +23,23 @@ class ProfileViewModel @Inject constructor(
     private val _loading = MutableLiveData(false)
     val loading: LiveData<Boolean> = _loading
 
+    private val _watchlistMovies = MutableLiveData<List<Movie>>(emptyList())
+    val watchlistMovies: LiveData<List<Movie>> = _watchlistMovies
+
+    private val _watchlistTv = MutableLiveData<List<Movie>>(emptyList())
+    val watchlistTv: LiveData<List<Movie>> = _watchlistTv
+
     fun loadProfile() {
         viewModelScope.launch {
             _loading.postValue(true)
-            runCatching { apiService.getAccountDetails() }
-                .onSuccess { _profile.postValue(it.body()) }
+            runCatching {
+                val accountResp = apiService.getAccountDetails()
+                val movieResp = apiService.getWatchlistMovies()
+                val tvResp = apiService.getWatchlistTv()
+                _profile.postValue(accountResp.body())
+                _watchlistMovies.postValue(movieResp.body()?.results.orEmpty())
+                _watchlistTv.postValue(tvResp.body()?.results.orEmpty())
+            }
             _loading.postValue(false)
         }
     }

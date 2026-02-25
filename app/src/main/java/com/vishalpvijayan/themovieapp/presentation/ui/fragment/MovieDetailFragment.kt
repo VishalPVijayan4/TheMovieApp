@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.vishalpvijayan.themovieapp.databinding.FragmentMovieDetailBinding
@@ -44,11 +45,25 @@ class MovieDetailFragment : Fragment() {
         binding.rvSimilarMovies.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
         binding.rvSimilarMovies.adapter = similarAdapter
 
-        creditsAdapter = CreditsAdapter()
+        creditsAdapter = CreditsAdapter { person ->
+            findNavController().navigate(MovieDetailFragmentDirections.actionMovieDetailFragmentToPersonDetailFragment(person.id))
+        }
         binding.rvCredits.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
         binding.rvCredits.adapter = creditsAdapter
 
         viewModel.getMovieDetail(args.movieId)
+        binding.contentGroup.alpha = 0f
+
+        binding.btnFavorite.setOnClickListener {
+            viewModel.toggleFavorite(args.movieId)
+        }
+
+        viewModel.favorite.observe(viewLifecycleOwner) {
+            binding.btnFavorite.setImageResource(
+                if (it) com.vishalpvijayan.themovieapp.R.drawable.ic_favorite_filled
+                else com.vishalpvijayan.themovieapp.R.drawable.ic_favorite_outline
+            )
+        }
 
         viewModel.movie.observe(viewLifecycleOwner) { movie ->
             movie?.let {
@@ -114,7 +129,10 @@ class MovieDetailFragment : Fragment() {
         }
 
         viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
-            binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
+            binding.progressBar.isVisible = isLoading
+            if (!isLoading) {
+                binding.contentGroup.animate().alpha(1f).setDuration(220).start()
+            }
         }
 
         viewModel.error.observe(viewLifecycleOwner) { errorMsg ->

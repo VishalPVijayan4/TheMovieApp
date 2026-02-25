@@ -7,17 +7,20 @@ import androidx.lifecycle.viewModelScope
 import com.vishalpvijayan.themovieapp.data.remote.api.ApiService
 import com.vishalpvijayan.themovieapp.data.remote.model.EpisodeGroupItem
 import com.vishalpvijayan.themovieapp.data.remote.model.CreditPerson
+import com.vishalpvijayan.themovieapp.data.remote.model.FavoriteRequest
 import com.vishalpvijayan.themovieapp.data.remote.model.Movie
 import com.vishalpvijayan.themovieapp.data.remote.model.TvSeriesDetail
 import com.vishalpvijayan.themovieapp.data.remote.model.VideoItem
 import com.vishalpvijayan.themovieapp.di.TmdbApi
+import com.vishalpvijayan.themovieapp.utilis.SessionManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class TvSeriesDetailViewModel @Inject constructor(
-    @TmdbApi private val apiService: ApiService
+    @TmdbApi private val apiService: ApiService,
+    private val sessionManager: SessionManager
 ) : ViewModel() {
 
     private val _detail = MutableLiveData<TvSeriesDetail?>()
@@ -49,6 +52,9 @@ class TvSeriesDetailViewModel @Inject constructor(
     private val _error = MutableLiveData<String?>(null)
     val error: LiveData<String?> = _error
 
+    private val _favorite = MutableLiveData(false)
+    val favorite: LiveData<Boolean> = _favorite
+
     fun load(seriesId: Int) {
         viewModelScope.launch {
             _loading.postValue(true)
@@ -77,6 +83,26 @@ class TvSeriesDetailViewModel @Inject constructor(
                 _error.postValue("Failed to load TV details")
             }
             _loading.postValue(false)
+        }
+    }
+
+    fun toggleFavorite(seriesId: Int) {
+        val sessionId = sessionManager.getSessionId() ?: run {
+            _error.postValue("Login required to manage favorites")
+            return
+        }
+        val newValue = !(_favorite.value ?: false)
+        viewModelScope.launch {
+            runCatching {
+                apiService.setFavorite(
+                    request = FavoriteRequest(media_type = "tv", media_id = seriesId, favorite = newValue),
+                    sessionId = sessionId
+                )
+            }.onSuccess {
+                _favorite.postValue(newValue)
+            }.onFailure {
+                _error.postValue("Failed to update favorite")
+            }
         }
     }
 }
