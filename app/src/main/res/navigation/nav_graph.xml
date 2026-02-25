@@ -162,13 +162,6 @@
             app:exitAnim="@anim/zoom_fade_out"
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right" />
-        <action
-            android:id="@+id/action_movieDetailFragment_to_personDetailFragment"
-            app:destination="@id/personDetailFragment"
-            app:enterAnim="@anim/slide_in_right"
-            app:exitAnim="@anim/slide_out_left"
-            app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right" />
     </fragment>
 
 
@@ -231,13 +224,6 @@
             app:destination="@id/personDetailFragment"
             app:enterAnim="@anim/zoom_fade_in"
             app:exitAnim="@anim/zoom_fade_out"
-            app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right" />
-        <action
-            android:id="@+id/action_searchFragment_to_personDetailFragment"
-            app:destination="@id/personDetailFragment"
-            app:enterAnim="@anim/slide_in_right"
-            app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right" />
     </fragment>
@@ -349,30 +335,6 @@
             app:destination="@id/tvSeriesDetailFragment"
             app:enterAnim="@anim/zoom_fade_in"
             app:exitAnim="@anim/zoom_fade_out"
-            app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right" />
-        <action
-            android:id="@+id/action_tvSeriesDetailFragment_to_personDetailFragment"
-            app:destination="@id/personDetailFragment"
-            app:enterAnim="@anim/slide_in_right"
-            app:exitAnim="@anim/slide_out_left"
-            app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right" />
-    </fragment>
-
-    <fragment
-        android:id="@+id/personDetailFragment"
-        android:name="com.vishalpvijayan.themovieapp.presentation.ui.fragment.PersonDetailFragment"
-        android:label="Person Detail"
-        tools:layout="@layout/fragment_person_detail">
-        <argument
-            android:name="personId"
-            app:argType="integer" />
-        <action
-            android:id="@+id/action_personDetailFragment_to_movieDetailFragment"
-            app:destination="@id/movieDetailFragment"
-            app:enterAnim="@anim/slide_in_right"
-            app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right" />
     </fragment>
