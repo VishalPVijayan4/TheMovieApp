@@ -13,7 +13,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
-import com.vishalpvijayan.themovieapp.BuildConfig
 import com.vishalpvijayan.themovieapp.databinding.FragmentProfileBinding
 import com.vishalpvijayan.themovieapp.presentation.viewmodel.AuthViewModel
 import com.vishalpvijayan.themovieapp.presentation.viewmodel.ProfileViewModel
@@ -40,7 +39,7 @@ class ProfileFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         viewModel.loadProfile()
 
-        binding.tvVersion.text = "Version ${BuildConfig.VERSION_NAME}"
+        binding.tvVersion.text = "Version 1.0.0"
 
         binding.btnAbout.setOnClickListener {
             showScrollableDialog(

@@ -72,7 +72,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="14dp"
-                android:text="Account & Settings"
+                android:text="@string/account_settings"
                 android:textColor="@color/prime_text"
                 android:textStyle="bold" />
 
@@ -81,6 +81,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
+                android:textColor="@color/white"
                 android:text="About"
                 app:backgroundTint="@color/prime_card" />
 
@@ -90,6 +91,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:text="Privacy Policy"
+                android:textColor="@color/white"
+                android:background="@color/prime_card"
                 app:backgroundTint="@color/prime_card" />
 
             <com.google.android.material.button.MaterialButton
@@ -97,6 +100,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
+                android:textColor="@color/white"
                 android:text="Contact Developer (LinkedIn)"
                 app:backgroundTint="@color/prime_card" />
 
@@ -105,6 +109,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
+                android:textColor="@color/white"
                 android:text="Logout"
                 app:backgroundTint="@color/prime_accent" />
 
