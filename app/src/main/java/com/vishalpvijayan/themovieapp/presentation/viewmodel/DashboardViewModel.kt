@@ -8,6 +8,7 @@ import com.vishalpvijayan.themovieapp.data.remote.api.ApiService
 import com.vishalpvijayan.themovieapp.data.remote.model.AccountDetails
 import com.vishalpvijayan.themovieapp.data.remote.model.Movie
 import com.vishalpvijayan.themovieapp.di.TmdbApi
+import com.vishalpvijayan.themovieapp.utilis.SessionManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -26,7 +27,8 @@ data class SectionState(
 
 @HiltViewModel
 class DashboardViewModel @Inject constructor(
-    @TmdbApi private val apiService: ApiService
+    @TmdbApi private val apiService: ApiService,
+    private val sessionManager: SessionManager
 ) : ViewModel() {
 
     private val categories = listOf(
@@ -128,7 +130,8 @@ class DashboardViewModel @Inject constructor(
 
     private fun loadAccount() {
         viewModelScope.launch {
-            runCatching { apiService.getAccountDetails() }
+            val accountId = sessionManager.getAccountId() ?: return@launch
+            runCatching { apiService.getAccountDetails(accountId) }
                 .onSuccess { _accountDetails.postValue(it.body()) }
         }
     }

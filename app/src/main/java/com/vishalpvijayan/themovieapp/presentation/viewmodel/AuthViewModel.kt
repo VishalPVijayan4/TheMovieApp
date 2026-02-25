@@ -54,6 +54,8 @@ class AuthViewModel @Inject constructor(
                 if (session.isSuccessful && !sessionId.isNullOrBlank()) {
                     sessionManager.saveSessionId(sessionId)
                     sessionManager.saveExpiry(tokenResponse.body()?.expires_at)
+                    val accountResp = tmdbApiService.getCurrentAccountDetails(sessionId)
+                    accountResp.body()?.id?.let { sessionManager.saveAccountId(it) }
                     _loggedIn.postValue(true)
                     _authMessage.postValue("Login successful")
                 } else {

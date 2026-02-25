@@ -29,6 +29,15 @@ class SessionManager @Inject constructor(
 
     fun getExpiry(): String? = prefs.getString(KEY_EXPIRES_AT, null)
 
+    fun saveAccountId(accountId: Int) {
+        prefs.edit().putInt(KEY_ACCOUNT_ID, accountId).apply()
+    }
+
+    fun getAccountId(): Int? {
+        val value = prefs.getInt(KEY_ACCOUNT_ID, -1)
+        return if (value <= 0) null else value
+    }
+
     fun isExpired(): Boolean {
         val expiry = getExpiry() ?: return false
         return runCatching {
@@ -40,11 +49,12 @@ class SessionManager @Inject constructor(
     }
 
     fun clearSession() {
-        prefs.edit().remove(KEY_SESSION_ID).remove(KEY_EXPIRES_AT).apply()
+        prefs.edit().remove(KEY_SESSION_ID).remove(KEY_EXPIRES_AT).remove(KEY_ACCOUNT_ID).apply()
     }
 
     private companion object {
         const val KEY_SESSION_ID = "session_id"
         const val KEY_EXPIRES_AT = "expires_at"
+        const val KEY_ACCOUNT_ID = "account_id"
     }
 }

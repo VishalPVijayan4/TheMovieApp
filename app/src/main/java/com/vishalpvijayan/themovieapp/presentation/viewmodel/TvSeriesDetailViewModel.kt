@@ -5,19 +5,23 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.vishalpvijayan.themovieapp.data.remote.api.ApiService
-import com.vishalpvijayan.themovieapp.data.remote.model.EpisodeGroupItem
 import com.vishalpvijayan.themovieapp.data.remote.model.CreditPerson
+import com.vishalpvijayan.themovieapp.data.remote.model.EpisodeGroupItem
+import com.vishalpvijayan.themovieapp.data.remote.model.FavoriteRequest
 import com.vishalpvijayan.themovieapp.data.remote.model.Movie
+import com.vishalpvijayan.themovieapp.data.remote.model.WatchlistRequest
 import com.vishalpvijayan.themovieapp.data.remote.model.TvSeriesDetail
 import com.vishalpvijayan.themovieapp.data.remote.model.VideoItem
 import com.vishalpvijayan.themovieapp.di.TmdbApi
+import com.vishalpvijayan.themovieapp.utilis.SessionManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class TvSeriesDetailViewModel @Inject constructor(
-    @TmdbApi private val apiService: ApiService
+    @TmdbApi private val apiService: ApiService,
+    private val sessionManager: SessionManager
 ) : ViewModel() {
 
     private val _detail = MutableLiveData<TvSeriesDetail?>()
@@ -49,6 +53,12 @@ class TvSeriesDetailViewModel @Inject constructor(
     private val _error = MutableLiveData<String?>(null)
     val error: LiveData<String?> = _error
 
+    private val _favorite = MutableLiveData(false)
+    val favorite: LiveData<Boolean> = _favorite
+
+    private val _watchlist = MutableLiveData(false)
+    val watchlist: LiveData<Boolean> = _watchlist
+
     fun load(seriesId: Int) {
         viewModelScope.launch {
             _loading.postValue(true)
@@ -73,10 +83,64 @@ class TvSeriesDetailViewModel @Inject constructor(
                     _watchProvidersText.postValue("Where to watch: " + providers.keys.take(6).joinToString())
                     _watchProvidersLink.postValue(providers.values.firstOrNull()?.link)
                 }
+                loadStates(seriesId)
             }.onFailure {
                 _error.postValue("Failed to load TV details")
             }
             _loading.postValue(false)
+        }
+    }
+
+    private suspend fun loadStates(seriesId: Int) {
+        val sessionId = sessionManager.getSessionId() ?: return
+        runCatching {
+            val states = apiService.getTvAccountStates(seriesId, sessionId).body()
+            _favorite.postValue(states?.favorite == true)
+            _watchlist.postValue(states?.watchlist == true)
+        }
+    }
+
+    fun toggleFavorite(seriesId: Int) {
+        val sessionId = sessionManager.getSessionId() ?: run {
+            _error.postValue("Login required to manage favorites")
+            return
+        }
+        val accountId = sessionManager.getAccountId() ?: run {
+            _error.postValue("Missing account information, please login again")
+            return
+        }
+        val newValue = !(_favorite.value ?: false)
+        viewModelScope.launch {
+            runCatching {
+                apiService.setFavorite(
+                    accountId = accountId,
+                    request = FavoriteRequest(media_type = "tv", media_id = seriesId, favorite = newValue),
+                    sessionId = sessionId
+                )
+            }.onSuccess { _favorite.postValue(newValue) }
+                .onFailure { _error.postValue("Failed to update favorite") }
+        }
+    }
+
+    fun toggleWatchlist(seriesId: Int) {
+        val sessionId = sessionManager.getSessionId() ?: run {
+            _error.postValue("Login required to manage watchlist")
+            return
+        }
+        val accountId = sessionManager.getAccountId() ?: run {
+            _error.postValue("Missing account information, please login again")
+            return
+        }
+        val newValue = !(_watchlist.value ?: false)
+        viewModelScope.launch {
+            runCatching {
+                apiService.setWatchlist(
+                    accountId = accountId,
+                    request = WatchlistRequest(media_type = "tv", media_id = seriesId, watchlist = newValue),
+                    sessionId = sessionId
+                )
+            }.onSuccess { _watchlist.postValue(newValue) }
+                .onFailure { _error.postValue("Failed to update watchlist") }
         }
     }
 }

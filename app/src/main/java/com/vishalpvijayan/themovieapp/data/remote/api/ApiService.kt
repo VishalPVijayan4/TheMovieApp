@@ -11,6 +11,12 @@ import com.vishalpvijayan.themovieapp.data.remote.model.MovieImagesResponse
 import com.vishalpvijayan.themovieapp.data.remote.model.TvSeriesDetail
 import com.vishalpvijayan.themovieapp.data.remote.model.VideoResponse
 import com.vishalpvijayan.themovieapp.data.remote.model.MovieResponse
+import com.vishalpvijayan.themovieapp.data.remote.model.MultiSearchResponse
+import com.vishalpvijayan.themovieapp.data.remote.model.PersonCreditsResponse
+import com.vishalpvijayan.themovieapp.data.remote.model.PersonDetail
+import com.vishalpvijayan.themovieapp.data.remote.model.FavoriteRequest
+import com.vishalpvijayan.themovieapp.data.remote.model.AccountStatesResponse
+import com.vishalpvijayan.themovieapp.data.remote.model.WatchlistRequest
 import com.vishalpvijayan.themovieapp.data.remote.model.SessionRequest
 import com.vishalpvijayan.themovieapp.data.remote.model.SessionResponse
 import com.vishalpvijayan.themovieapp.data.remote.model.TmdbStatusResponse
@@ -105,6 +111,13 @@ interface ApiService {
         @Query("include_adult") includeAdult: Boolean = false
     ): Response<MovieResponse>
 
+    @GET("search/multi")
+    suspend fun searchMulti(
+        @Query("query") query: String,
+        @Query("page") page: Int = 1,
+        @Query("include_adult") includeAdult: Boolean = false
+    ): Response<MultiSearchResponse>
+
     @GET("movie/{movie_id}")
     suspend fun getMovieDetails(@Path("movie_id") movieId: Int): Response<Movie>
 
@@ -143,6 +156,48 @@ interface ApiService {
     @GET("movie/{movie_id}/watch/providers")
     suspend fun getMovieWatchProviders(@Path("movie_id") movieId: Int): Response<WatchProviderResponse>
 
+    @POST("account/{account_id}/favorite")
+    suspend fun setFavorite(
+        @Path("account_id") accountId: Int,
+        @Body request: FavoriteRequest,
+        @Query("session_id") sessionId: String
+    ): Response<TmdbStatusResponse>
+
+    @POST("account/{account_id}/watchlist")
+    suspend fun setWatchlist(
+        @Path("account_id") accountId: Int,
+        @Body request: WatchlistRequest,
+        @Query("session_id") sessionId: String
+    ): Response<TmdbStatusResponse>
+
+    @GET("account/{account_id}/favorite/movies")
+    suspend fun getFavoriteMovies(
+        @Path("account_id") accountId: Int,
+        @Query("page") page: Int = 1,
+        @Query("sort_by") sortBy: String = "created_at.asc"
+    ): Response<MovieResponse>
+
+    @GET("account/{account_id}/favorite/tv")
+    suspend fun getFavoriteTv(
+        @Path("account_id") accountId: Int,
+        @Query("page") page: Int = 1,
+        @Query("sort_by") sortBy: String = "created_at.asc"
+    ): Response<MovieResponse>
+
+    @GET("account/{account_id}/watchlist/movies")
+    suspend fun getWatchlistMovies(
+        @Path("account_id") accountId: Int,
+        @Query("page") page: Int = 1,
+        @Query("sort_by") sortBy: String = "created_at.asc"
+    ): Response<MovieResponse>
+
+    @GET("account/{account_id}/watchlist/tv")
+    suspend fun getWatchlistTv(
+        @Path("account_id") accountId: Int,
+        @Query("page") page: Int = 1,
+        @Query("sort_by") sortBy: String = "created_at.asc"
+    ): Response<MovieResponse>
+
     @GET("tv/{series_id}/credits")
     suspend fun getTvCredits(@Path("series_id") seriesId: Int): Response<CreditsResponse>
 
@@ -155,6 +210,27 @@ interface ApiService {
     @GET("genre/tv/list")
     suspend fun getTvGenres(): Response<GenreListResponse>
 
+    @GET("person/{person_id}")
+    suspend fun getPersonDetails(@Path("person_id") personId: Int): Response<PersonDetail>
+
+    @GET("person/{person_id}/movie_credits")
+    suspend fun getPersonMovieCredits(@Path("person_id") personId: Int): Response<PersonCreditsResponse>
+
     @GET("account/{account_id}")
-    suspend fun getAccountDetails(@Path("account_id") accountId: Int = 8167978): Response<AccountDetails>
+    suspend fun getAccountDetails(@Path("account_id") accountId: Int): Response<AccountDetails>
+
+    @GET("account")
+    suspend fun getCurrentAccountDetails(@Query("session_id") sessionId: String): Response<AccountDetails>
+
+    @GET("movie/{movie_id}/account_states")
+    suspend fun getMovieAccountStates(
+        @Path("movie_id") movieId: Int,
+        @Query("session_id") sessionId: String
+    ): Response<AccountStatesResponse>
+
+    @GET("tv/{series_id}/account_states")
+    suspend fun getTvAccountStates(
+        @Path("series_id") seriesId: Int,
+        @Query("session_id") sessionId: String
+    ): Response<AccountStatesResponse>
 }

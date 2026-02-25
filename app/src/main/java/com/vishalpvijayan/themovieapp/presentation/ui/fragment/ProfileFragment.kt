@@ -39,6 +39,13 @@ class ProfileFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         viewModel.loadProfile()
 
+        binding.btnOpenFavorites.setOnClickListener {
+            findNavController().navigate(ProfileFragmentDirections.actionProfileFragmentToMediaCollectionFragment("favorite"))
+        }
+        binding.btnOpenWatchlist.setOnClickListener {
+            findNavController().navigate(ProfileFragmentDirections.actionProfileFragmentToMediaCollectionFragment("watchlist"))
+        }
+
         binding.tvVersion.text = "Version 1.0.0"
 
         binding.btnAbout.setOnClickListener {

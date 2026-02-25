@@ -1,5 +1,6 @@
 package com.vishalpvijayan.themovieapp.di
 
+import com.vishalpvijayan.themovieapp.BuildConfig
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -15,8 +16,6 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object TmdbNetworkModule {
 
-    private const val TMDB_BEARER_TOKEN = "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJiMjZlZDM1YWMzMTdlODViYmQwYjIzOTZlYmFlYjkxOCIsIm5iZiI6MTU0Mzg1Njc5NS4zNiwic3ViIjoiNWMwNTYyOWIwZTBhMjYzM2E2MGNjN2ZmIiwic2NvcGVzIjpbImFwaV9yZWFkIl0sInZlcnNpb24iOjF9.J5VYtii0CZLZeC_92MMepwXdsMV163TNYaZFVYKrUpA"
-
     @Provides
     @Singleton
     @Named("TmdbOkHttp")
@@ -26,12 +25,12 @@ object TmdbNetworkModule {
                 val original = chain.request()
                 val url = original.url.newBuilder()
                     .addQueryParameter("language", "en-US")
-                                        .build()
+                    .build()
 
                 val request = original.newBuilder()
                     .url(url)
                     .addHeader("accept", "application/json")
-                    .addHeader("Authorization", TMDB_BEARER_TOKEN)
+                    .addHeader("Authorization", "Bearer ${BuildConfig.TMDB_BEARER_TOKEN}")
                     .build()
 
                 chain.proceed(request)

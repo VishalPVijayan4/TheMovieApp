@@ -6,24 +6,31 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.vishalpvijayan.themovieapp.data.remote.model.Movie
+import com.vishalpvijayan.themovieapp.data.remote.model.SearchResultItem
 import com.vishalpvijayan.themovieapp.databinding.ItemSearchResultBinding
 
 class SearchAdapter(
-    private val onItemClick: (Movie) -> Unit
-) : ListAdapter<Movie, SearchAdapter.SearchViewHolder>(Diff) {
+    private val onItemClick: (SearchResultItem) -> Unit
+) : ListAdapter<SearchResultItem, SearchAdapter.SearchViewHolder>(Diff) {
 
-    object Diff : DiffUtil.ItemCallback<Movie>() {
-        override fun areItemsTheSame(oldItem: Movie, newItem: Movie): Boolean = oldItem.id == newItem.id
-        override fun areContentsTheSame(oldItem: Movie, newItem: Movie): Boolean = oldItem == newItem
+    object Diff : DiffUtil.ItemCallback<SearchResultItem>() {
+        override fun areItemsTheSame(oldItem: SearchResultItem, newItem: SearchResultItem): Boolean =
+            oldItem.id == newItem.id && oldItem.mediaType == newItem.mediaType
+
+        override fun areContentsTheSame(oldItem: SearchResultItem, newItem: SearchResultItem): Boolean = oldItem == newItem
     }
 
     inner class SearchViewHolder(private val binding: ItemSearchResultBinding) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(item: Movie) {
+        fun bind(item: SearchResultItem) {
             binding.tvTitle.text = item.title ?: "Untitled"
-            binding.tvMeta.text = "⭐ ${item.vote_average?.let { String.format("%.1f", it) } ?: "N/A"}"
-            val poster = item.poster_path ?: item.backdrop_path
-            Glide.with(binding.root).load("https://image.tmdb.org/t/p/w342$poster").into(binding.ivPoster)
+            binding.tvMeta.text = when (item.mediaType) {
+                "person" -> {
+                    val knownMovies = item.knownFor.orEmpty().take(3).mapNotNull { it.title }.joinToString()
+                    if (knownMovies.isBlank()) "Person" else "Person • Known for: $knownMovies"
+                }
+                else -> "${item.mediaType.uppercase()} • ⭐ ${item.voteAverage?.let { String.format("%.1f", it) } ?: "N/A"}"
+            }
+            Glide.with(binding.root).load("https://image.tmdb.org/t/p/w342${item.imagePath}").into(binding.ivPoster)
             binding.root.setOnClickListener { onItemClick(item) }
         }
     }

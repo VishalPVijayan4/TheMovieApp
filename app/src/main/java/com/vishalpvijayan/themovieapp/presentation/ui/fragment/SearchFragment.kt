@@ -30,25 +30,20 @@ class SearchFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         adapter = SearchAdapter { item ->
-            if (binding.rbTv.isChecked) {
-                findNavController().navigate(SearchFragmentDirections.actionSearchFragmentToTvSeriesDetailFragment(item.id))
-            } else {
-                findNavController().navigate(SearchFragmentDirections.actionSearchFragmentToMovieDetailFragment(item.id))
+            when (item.mediaType) {
+                "tv" -> findNavController().navigate(SearchFragmentDirections.actionSearchFragmentToTvSeriesDetailFragment(item.id))
+                "person" -> findNavController().navigate(SearchFragmentDirections.actionSearchFragmentToPersonDetailFragment(item.id))
+                else -> findNavController().navigate(SearchFragmentDirections.actionSearchFragmentToMovieDetailFragment(item.id))
             }
         }
         binding.rvSearch.layoutManager = LinearLayoutManager(requireContext())
         binding.rvSearch.adapter = adapter
 
         val triggerSearch = {
-            viewModel.search(
-                query = binding.etQuery.text?.toString().orEmpty(),
-                searchTv = binding.rbTv.isChecked
-            )
+            viewModel.search(query = binding.etQuery.text?.toString().orEmpty())
         }
 
         binding.etQuery.doAfterTextChanged { triggerSearch() }
-        binding.rbMovie.setOnCheckedChangeListener { _, _ -> triggerSearch() }
-        binding.rbTv.setOnCheckedChangeListener { _, _ -> triggerSearch() }
 
         viewModel.results.observe(viewLifecycleOwner) { adapter.submitList(it) }
         viewModel.loading.observe(viewLifecycleOwner) {
