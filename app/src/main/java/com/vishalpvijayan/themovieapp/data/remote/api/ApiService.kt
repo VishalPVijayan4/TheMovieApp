@@ -15,6 +15,8 @@ import com.vishalpvijayan.themovieapp.data.remote.model.MultiSearchResponse
 import com.vishalpvijayan.themovieapp.data.remote.model.PersonCreditsResponse
 import com.vishalpvijayan.themovieapp.data.remote.model.PersonDetail
 import com.vishalpvijayan.themovieapp.data.remote.model.FavoriteRequest
+import com.vishalpvijayan.themovieapp.data.remote.model.AccountStatesResponse
+import com.vishalpvijayan.themovieapp.data.remote.model.WatchlistRequest
 import com.vishalpvijayan.themovieapp.data.remote.model.SessionRequest
 import com.vishalpvijayan.themovieapp.data.remote.model.SessionResponse
 import com.vishalpvijayan.themovieapp.data.remote.model.TmdbStatusResponse
@@ -156,35 +158,42 @@ interface ApiService {
 
     @POST("account/{account_id}/favorite")
     suspend fun setFavorite(
-        @Path("account_id") accountId: Int = 8167978,
+        @Path("account_id") accountId: Int,
         @Body request: FavoriteRequest,
+        @Query("session_id") sessionId: String
+    ): Response<TmdbStatusResponse>
+
+    @POST("account/{account_id}/watchlist")
+    suspend fun setWatchlist(
+        @Path("account_id") accountId: Int,
+        @Body request: WatchlistRequest,
         @Query("session_id") sessionId: String
     ): Response<TmdbStatusResponse>
 
     @GET("account/{account_id}/favorite/movies")
     suspend fun getFavoriteMovies(
-        @Path("account_id") accountId: Int = 8167978,
+        @Path("account_id") accountId: Int,
         @Query("page") page: Int = 1,
         @Query("sort_by") sortBy: String = "created_at.asc"
     ): Response<MovieResponse>
 
     @GET("account/{account_id}/favorite/tv")
     suspend fun getFavoriteTv(
-        @Path("account_id") accountId: Int = 8167978,
+        @Path("account_id") accountId: Int,
         @Query("page") page: Int = 1,
         @Query("sort_by") sortBy: String = "created_at.asc"
     ): Response<MovieResponse>
 
     @GET("account/{account_id}/watchlist/movies")
     suspend fun getWatchlistMovies(
-        @Path("account_id") accountId: Int = 8167978,
+        @Path("account_id") accountId: Int,
         @Query("page") page: Int = 1,
         @Query("sort_by") sortBy: String = "created_at.asc"
     ): Response<MovieResponse>
 
     @GET("account/{account_id}/watchlist/tv")
     suspend fun getWatchlistTv(
-        @Path("account_id") accountId: Int = 8167978,
+        @Path("account_id") accountId: Int,
         @Query("page") page: Int = 1,
         @Query("sort_by") sortBy: String = "created_at.asc"
     ): Response<MovieResponse>
@@ -208,5 +217,20 @@ interface ApiService {
     suspend fun getPersonMovieCredits(@Path("person_id") personId: Int): Response<PersonCreditsResponse>
 
     @GET("account/{account_id}")
-    suspend fun getAccountDetails(@Path("account_id") accountId: Int = 8167978): Response<AccountDetails>
+    suspend fun getAccountDetails(@Path("account_id") accountId: Int): Response<AccountDetails>
+
+    @GET("account")
+    suspend fun getCurrentAccountDetails(@Query("session_id") sessionId: String): Response<AccountDetails>
+
+    @GET("movie/{movie_id}/account_states")
+    suspend fun getMovieAccountStates(
+        @Path("movie_id") movieId: Int,
+        @Query("session_id") sessionId: String
+    ): Response<AccountStatesResponse>
+
+    @GET("tv/{series_id}/account_states")
+    suspend fun getTvAccountStates(
+        @Path("series_id") seriesId: Int,
+        @Query("session_id") sessionId: String
+    ): Response<AccountStatesResponse>
 }

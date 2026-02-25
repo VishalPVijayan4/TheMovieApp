@@ -53,15 +53,25 @@ class MovieDetailFragment : Fragment() {
 
         viewModel.getMovieDetail(args.movieId)
         binding.contentGroup.alpha = 0f
+        binding.contentGroup.translationY = 40f
 
         binding.btnFavorite.setOnClickListener {
             viewModel.toggleFavorite(args.movieId)
+        }
+        binding.btnWatchlist.setOnClickListener {
+            viewModel.toggleWatchlist(args.movieId)
         }
 
         viewModel.favorite.observe(viewLifecycleOwner) {
             binding.btnFavorite.setImageResource(
                 if (it) com.vishalpvijayan.themovieapp.R.drawable.ic_favorite_filled
                 else com.vishalpvijayan.themovieapp.R.drawable.ic_favorite_outline
+            )
+        }
+        viewModel.watchlist.observe(viewLifecycleOwner) {
+            binding.btnWatchlist.setImageResource(
+                if (it) com.vishalpvijayan.themovieapp.R.drawable.ic_watchlist_filled
+                else com.vishalpvijayan.themovieapp.R.drawable.ic_watchlist_outline
             )
         }
 
@@ -131,7 +141,7 @@ class MovieDetailFragment : Fragment() {
         viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
             binding.progressBar.isVisible = isLoading
             if (!isLoading) {
-                binding.contentGroup.animate().alpha(1f).setDuration(220).start()
+                binding.contentGroup.animate().alpha(1f).translationY(0f).setDuration(300).start()
             }
         }
 

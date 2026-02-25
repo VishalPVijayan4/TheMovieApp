@@ -8,13 +8,15 @@ import com.vishalpvijayan.themovieapp.data.remote.api.ApiService
 import com.vishalpvijayan.themovieapp.data.remote.model.AccountDetails
 import com.vishalpvijayan.themovieapp.data.remote.model.Movie
 import com.vishalpvijayan.themovieapp.di.TmdbApi
+import com.vishalpvijayan.themovieapp.utilis.SessionManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
-    @TmdbApi private val apiService: ApiService
+    @TmdbApi private val apiService: ApiService,
+    private val sessionManager: SessionManager
 ) : ViewModel() {
 
     private val _profile = MutableLiveData<AccountDetails?>()
@@ -32,13 +34,10 @@ class ProfileViewModel @Inject constructor(
     fun loadProfile() {
         viewModelScope.launch {
             _loading.postValue(true)
-            runCatching {
-                val accountResp = apiService.getAccountDetails()
-                val movieResp = apiService.getWatchlistMovies()
-                val tvResp = apiService.getWatchlistTv()
-                _profile.postValue(accountResp.body())
-                _watchlistMovies.postValue(movieResp.body()?.results.orEmpty())
-                _watchlistTv.postValue(tvResp.body()?.results.orEmpty())
+            val accountId = sessionManager.getAccountId()
+            if (accountId != null) {
+                runCatching { apiService.getAccountDetails(accountId) }
+                    .onSuccess { _profile.postValue(it.body()) }
             }
             _loading.postValue(false)
         }

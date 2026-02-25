@@ -72,35 +72,27 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="14dp"
-                android:text="Favorites"
+                android:text="Collections"
                 android:textColor="@color/prime_text"
                 android:textStyle="bold" />
 
-            <TextView
-                android:layout_width="wrap_content"
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnOpenFavorites"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:text="Movies"
-                android:textColor="@color/prime_text_secondary" />
+                android:text="Open Favorites"
+                android:textColor="@color/white"
+                app:backgroundTint="@color/prime_card" />
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rvFavoriteMovies"
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnOpenWatchlist"
                 android:layout_width="match_parent"
-                android:layout_height="160dp"
-                android:layout_marginTop="6dp" />
-
-            <TextView
-                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:text="TV"
-                android:textColor="@color/prime_text_secondary" />
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rvFavoriteTv"
-                android:layout_width="match_parent"
-                android:layout_height="160dp"
-                android:layout_marginTop="6dp" />
+                android:layout_marginTop="8dp"
+                android:text="Open Watchlist"
+                android:textColor="@color/white"
+                app:backgroundTint="@color/prime_card" />
 
             <TextView
                 android:layout_width="wrap_content"

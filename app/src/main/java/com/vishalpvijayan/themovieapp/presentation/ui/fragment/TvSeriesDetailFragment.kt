@@ -48,15 +48,25 @@ class TvSeriesDetailFragment : Fragment() {
 
         viewModel.load(args.seriesId)
         binding.contentGroup.alpha = 0f
+        binding.contentGroup.translationY = 40f
 
         binding.btnFavorite.setOnClickListener {
             viewModel.toggleFavorite(args.seriesId)
+        }
+        binding.btnWatchlist.setOnClickListener {
+            viewModel.toggleWatchlist(args.seriesId)
         }
 
         viewModel.favorite.observe(viewLifecycleOwner) {
             binding.btnFavorite.setImageResource(
                 if (it) com.vishalpvijayan.themovieapp.R.drawable.ic_favorite_filled
                 else com.vishalpvijayan.themovieapp.R.drawable.ic_favorite_outline
+            )
+        }
+        viewModel.watchlist.observe(viewLifecycleOwner) {
+            binding.btnWatchlist.setImageResource(
+                if (it) com.vishalpvijayan.themovieapp.R.drawable.ic_watchlist_filled
+                else com.vishalpvijayan.themovieapp.R.drawable.ic_watchlist_outline
             )
         }
 
@@ -116,7 +126,7 @@ class TvSeriesDetailFragment : Fragment() {
         viewModel.loading.observe(viewLifecycleOwner) {
             binding.progressBar.isVisible = it
             if (!it) {
-                binding.contentGroup.animate().alpha(1f).setDuration(220).start()
+                binding.contentGroup.animate().alpha(1f).translationY(0f).setDuration(300).start()
             }
         }
 

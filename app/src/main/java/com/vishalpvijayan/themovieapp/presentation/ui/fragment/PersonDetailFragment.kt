@@ -40,6 +40,7 @@ class PersonDetailFragment : Fragment() {
 
         viewModel.load(args.personId)
         binding.contentGroup.alpha = 0f
+        binding.contentGroup.translationY = 40f
 
         viewModel.person.observe(viewLifecycleOwner) { person ->
             person ?: return@observe
@@ -57,7 +58,7 @@ class PersonDetailFragment : Fragment() {
         viewModel.loading.observe(viewLifecycleOwner) {
             binding.progressBar.visibility = if (it) View.VISIBLE else View.GONE
             if (!it) {
-                binding.contentGroup.animate().alpha(1f).setDuration(220).start()
+                binding.contentGroup.animate().alpha(1f).translationY(0f).setDuration(300).start()
             }
         }
 

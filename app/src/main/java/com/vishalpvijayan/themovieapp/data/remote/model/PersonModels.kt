@@ -19,3 +19,10 @@ data class FavoriteRequest(
     val media_id: Int,
     val favorite: Boolean
 )
+
+
+data class WatchlistRequest(
+    val media_type: String,
+    val media_id: Int,
+    val watchlist: Boolean
+)

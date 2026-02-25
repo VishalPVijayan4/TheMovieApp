@@ -43,16 +43,12 @@ class ProfileFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         viewModel.loadProfile()
 
-        movieAdapter = ProfileFavoriteAdapter { movie ->
-            findNavController().navigate(ProfileFragmentDirections.actionProfileFragmentToMovieDetailFragment(movie.id))
+        binding.btnOpenFavorites.setOnClickListener {
+            findNavController().navigate(ProfileFragmentDirections.actionProfileFragmentToMediaCollectionFragment("favorite"))
         }
-        tvAdapter = ProfileFavoriteAdapter { tv ->
-            findNavController().navigate(ProfileFragmentDirections.actionProfileFragmentToTvSeriesDetailFragment(tv.id))
+        binding.btnOpenWatchlist.setOnClickListener {
+            findNavController().navigate(ProfileFragmentDirections.actionProfileFragmentToMediaCollectionFragment("watchlist"))
         }
-        binding.rvFavoriteMovies.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-        binding.rvFavoriteMovies.adapter = movieAdapter
-        binding.rvFavoriteTv.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-        binding.rvFavoriteTv.adapter = tvAdapter
 
         binding.tvVersion.text = "Version 1.0.0"
 
