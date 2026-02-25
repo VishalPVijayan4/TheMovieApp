@@ -9,7 +9,9 @@ import com.bumptech.glide.Glide
 import com.vishalpvijayan.themovieapp.data.remote.model.CreditPerson
 import com.vishalpvijayan.themovieapp.databinding.ItemCreditBinding
 
-class CreditsAdapter : ListAdapter<CreditPerson, CreditsAdapter.CreditViewHolder>(Diff) {
+class CreditsAdapter(
+    private val onItemClick: ((CreditPerson) -> Unit)? = null
+) : ListAdapter<CreditPerson, CreditsAdapter.CreditViewHolder>(Diff) {
 
     object Diff : DiffUtil.ItemCallback<CreditPerson>() {
         override fun areItemsTheSame(oldItem: CreditPerson, newItem: CreditPerson) = oldItem.id == newItem.id
@@ -22,6 +24,7 @@ class CreditsAdapter : ListAdapter<CreditPerson, CreditsAdapter.CreditViewHolder
             binding.tvCharacter.text = item.character ?: ""
             val image = item.profile_path?.let { "https://image.tmdb.org/t/p/w342$it" }
             Glide.with(binding.root).load(image).into(binding.ivProfile)
+            binding.root.setOnClickListener { onItemClick?.invoke(item) }
         }
     }
 

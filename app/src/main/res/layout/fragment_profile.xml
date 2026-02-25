@@ -72,6 +72,32 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="14dp"
+                android:text="Collections"
+                android:textColor="@color/prime_text"
+                android:textStyle="bold" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnOpenFavorites"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="Open Favorites"
+                android:textColor="@color/white"
+                app:backgroundTint="@color/prime_card" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnOpenWatchlist"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="Open Watchlist"
+                android:textColor="@color/white"
+                app:backgroundTint="@color/prime_card" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
                 android:text="@string/account_settings"
                 android:textColor="@color/prime_text"
                 android:textStyle="bold" />

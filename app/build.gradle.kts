@@ -14,6 +14,7 @@ android {
     buildFeatures {
         //noinspection DataBindingWithoutKapt
         dataBinding = true
+        buildConfig = true
     }
 
     defaultConfig {
@@ -24,10 +25,9 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-    }
-    buildFeatures {
-        //noinspection DataBindingWithoutKapt
-        dataBinding = true
+
+        val tmdbBearerToken = (project.findProperty("TMDB_BEARER_TOKEN") as? String).orEmpty()
+        buildConfigField("String", "TMDB_BEARER_TOKEN", "\"$tmdbBearerToken\"")
     }
 
     buildTypes {
