@@ -12,8 +12,10 @@ import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.vishalpvijayan.themovieapp.databinding.FragmentProfileBinding
+import com.vishalpvijayan.themovieapp.presentation.ui.adapter.ProfileFavoriteAdapter
 import com.vishalpvijayan.themovieapp.presentation.viewmodel.AuthViewModel
 import com.vishalpvijayan.themovieapp.presentation.viewmodel.ProfileViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -25,6 +27,8 @@ class ProfileFragment : Fragment() {
     private val binding get() = _binding!!
     private val viewModel: ProfileViewModel by viewModels()
     private val authViewModel: AuthViewModel by viewModels()
+    private lateinit var movieAdapter: ProfileFavoriteAdapter
+    private lateinit var tvAdapter: ProfileFavoriteAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -38,6 +42,17 @@ class ProfileFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel.loadProfile()
+
+        movieAdapter = ProfileFavoriteAdapter { movie ->
+            findNavController().navigate(ProfileFragmentDirections.actionProfileFragmentToMovieDetailFragment(movie.id))
+        }
+        tvAdapter = ProfileFavoriteAdapter { tv ->
+            findNavController().navigate(ProfileFragmentDirections.actionProfileFragmentToTvSeriesDetailFragment(tv.id))
+        }
+        binding.rvFavoriteMovies.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+        binding.rvFavoriteMovies.adapter = movieAdapter
+        binding.rvFavoriteTv.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+        binding.rvFavoriteTv.adapter = tvAdapter
 
         binding.tvVersion.text = "Version 1.0.0"
 
@@ -97,6 +112,9 @@ This app only displays publicly available information and does not host or strea
         viewModel.loading.observe(viewLifecycleOwner) {
             binding.progressBar.visibility = if (it) View.VISIBLE else View.GONE
         }
+
+        viewModel.watchlistMovies.observe(viewLifecycleOwner) { movieAdapter.submitList(it) }
+        viewModel.watchlistTv.observe(viewLifecycleOwner) { tvAdapter.submitList(it) }
     }
 
     private fun showScrollableDialog(title: String, message: String) {

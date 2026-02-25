@@ -7,9 +7,11 @@ import androidx.lifecycle.viewModelScope
 import com.vishalpvijayan.themovieapp.data.remote.api.ApiService
 import com.vishalpvijayan.themovieapp.data.remote.model.Movie
 import com.vishalpvijayan.themovieapp.data.remote.model.CreditPerson
+import com.vishalpvijayan.themovieapp.data.remote.model.FavoriteRequest
 import com.vishalpvijayan.themovieapp.data.remote.model.VideoItem
 import com.vishalpvijayan.themovieapp.di.TmdbApi
 import com.vishalpvijayan.themovieapp.domain.repository.UserRepository
+import com.vishalpvijayan.themovieapp.utilis.SessionManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -17,7 +19,8 @@ import javax.inject.Inject
 @HiltViewModel
 class MovieDetailViewModel @Inject constructor(
     private val userRepository: UserRepository,
-    @TmdbApi private val tmdbApiService: ApiService
+    @TmdbApi private val tmdbApiService: ApiService,
+    private val sessionManager: SessionManager
 ) : ViewModel() {
 
     private val _movie = MutableLiveData<Movie?>()
@@ -48,6 +51,9 @@ class MovieDetailViewModel @Inject constructor(
     val watchProvidersText: LiveData<String> = _watchProvidersText
     private val _watchProvidersLink = MutableLiveData<String?>(null)
     val watchProvidersLink: LiveData<String?> = _watchProvidersLink
+
+    private val _favorite = MutableLiveData(false)
+    val favorite: LiveData<Boolean> = _favorite
 
     fun getMovieDetail(movieId: Int) {
         _isLoading.value = true
@@ -83,6 +89,26 @@ class MovieDetailViewModel @Inject constructor(
                 _error.value = "Failed to load movie details"
             } finally {
                 _isLoading.value = false
+            }
+        }
+    }
+
+    fun toggleFavorite(movieId: Int) {
+        val sessionId = sessionManager.getSessionId() ?: run {
+            _error.postValue("Login required to manage favorites")
+            return
+        }
+        val newValue = !(_favorite.value ?: false)
+        viewModelScope.launch {
+            runCatching {
+                tmdbApiService.setFavorite(
+                    request = FavoriteRequest(media_type = "movie", media_id = movieId, favorite = newValue),
+                    sessionId = sessionId
+                )
+            }.onSuccess {
+                _favorite.postValue(newValue)
+            }.onFailure {
+                _error.postValue("Failed to update favorite")
             }
         }
     }
