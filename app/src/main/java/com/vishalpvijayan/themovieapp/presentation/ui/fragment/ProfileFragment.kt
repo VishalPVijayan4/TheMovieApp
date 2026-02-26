@@ -15,6 +15,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.vishalpvijayan.themovieapp.databinding.FragmentProfileBinding
+import com.vishalpvijayan.themovieapp.presentation.ui.adapter.BannerAdapter
 import com.vishalpvijayan.themovieapp.presentation.ui.adapter.ProfileFavoriteAdapter
 import com.vishalpvijayan.themovieapp.presentation.viewmodel.AuthViewModel
 import com.vishalpvijayan.themovieapp.presentation.viewmodel.ProfileViewModel
@@ -42,6 +43,17 @@ class ProfileFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel.loadProfile()
+
+
+        movieAdapter = ProfileFavoriteAdapter { movie ->
+            val action = ProfileFragmentDirections.actionProfileFragmentToMovieDetailFragment(movie.id)
+            findNavController().navigate(action)
+        }
+
+        tvAdapter = ProfileFavoriteAdapter { tv ->
+            val action = TvFragmentDirections.actionTvFragmentToTvSeriesDetailFragment(tv.id)
+            findNavController().navigate(action)
+        }
 
         binding.btnOpenFavorites.setOnClickListener {
             findNavController().navigate(ProfileFragmentDirections.actionProfileFragmentToMediaCollectionFragment("favorite"))

@@ -30,7 +30,7 @@ object TmdbNetworkModule {
                 val request = original.newBuilder()
                     .url(url)
                     .addHeader("accept", "application/json")
-                    .addHeader("Authorization", "Bearer ${BuildConfig.TMDB_BEARER_TOKEN}")
+                    .addHeader("Authorization", "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJiMjZlZDM1YWMzMTdlODViYmQwYjIzOTZlYmFlYjkxOCIsIm5iZiI6MTU0Mzg1Njc5NS4zNiwic3ViIjoiNWMwNTYyOWIwZTBhMjYzM2E2MGNjN2ZmIiwic2NvcGVzIjpbImFwaV9yZWFkIl0sInZlcnNpb24iOjF9.J5VYtii0CZLZeC_92MMepwXdsMV163TNYaZFVYKrUpA")
                     .build()
 
                 chain.proceed(request)
