@@ -40,7 +40,7 @@ class TvFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        bannerAdapter = BannerAdapter { tv ->
+        bannerAdapter = BannerAdapter { tv, _ ->
             val action = TvFragmentDirections.actionTvFragmentToTvSeriesDetailFragment(tv.id)
             findNavController().navigate(action)
         }
@@ -91,7 +91,7 @@ class TvFragment : Fragment() {
         adapter.submitList(state.movies)
     }
 
-    private fun createAdapter(): MovieAdapter = MovieAdapter(onItemClick = { tv ->
+    private fun createAdapter(): MovieAdapter = MovieAdapter(onItemClick = { tv, _ ->
         val action = TvFragmentDirections.actionTvFragmentToTvSeriesDetailFragment(tv.id)
         findNavController().navigate(action)
     })

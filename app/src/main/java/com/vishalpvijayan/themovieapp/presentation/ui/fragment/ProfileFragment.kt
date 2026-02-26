@@ -11,6 +11,7 @@ import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
@@ -45,12 +46,12 @@ class ProfileFragment : Fragment() {
         viewModel.loadProfile()
 
 
-        movieAdapter = ProfileFavoriteAdapter { movie ->
+        movieAdapter = ProfileFavoriteAdapter { movie, posterView ->
             val action = ProfileFragmentDirections.actionProfileFragmentToMovieDetailFragment(movie.id)
-            findNavController().navigate(action)
+            findNavController().navigate(action, FragmentNavigatorExtras(posterView to "poster_${movie.id}"))
         }
 
-        tvAdapter = ProfileFavoriteAdapter { tv ->
+        tvAdapter = ProfileFavoriteAdapter { tv, _ ->
             val action = TvFragmentDirections.actionTvFragmentToTvSeriesDetailFragment(tv.id)
             findNavController().navigate(action)
         }

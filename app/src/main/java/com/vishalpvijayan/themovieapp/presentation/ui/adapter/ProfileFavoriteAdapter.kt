@@ -2,6 +2,8 @@ package com.vishalpvijayan.themovieapp.presentation.ui.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.ImageView
+import androidx.core.view.ViewCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -10,7 +12,7 @@ import com.vishalpvijayan.themovieapp.data.remote.model.Movie
 import com.vishalpvijayan.themovieapp.databinding.ItemProfileFavoriteBinding
 
 class ProfileFavoriteAdapter(
-    private val onItemClick: (Movie) -> Unit
+    private val onItemClick: (Movie, ImageView) -> Unit
 ) : ListAdapter<Movie, ProfileFavoriteAdapter.FavoriteViewHolder>(Diff) {
 
     object Diff : DiffUtil.ItemCallback<Movie>() {
@@ -21,10 +23,11 @@ class ProfileFavoriteAdapter(
     inner class FavoriteViewHolder(private val binding: ItemProfileFavoriteBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: Movie) {
             binding.tvTitle.text = item.title ?: "Untitled"
+            ViewCompat.setTransitionName(binding.ivPoster, "poster_${item.id}")
             Glide.with(binding.root)
                 .load("https://image.tmdb.org/t/p/w342${item.poster_path ?: item.backdrop_path}")
                 .into(binding.ivPoster)
-            binding.root.setOnClickListener { onItemClick(item) }
+            binding.root.setOnClickListener { onItemClick(item, binding.ivPoster) }
         }
     }
 

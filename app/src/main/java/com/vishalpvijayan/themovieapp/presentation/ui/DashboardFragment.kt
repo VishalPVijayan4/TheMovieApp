@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -47,8 +48,11 @@ class DashboardFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        bannerAdapter = BannerAdapter { movie ->
-            findNavController().navigate(DashboardFragmentDirections.actionDashboardScreenToMovieDetailFragment(movie.id))
+        bannerAdapter = BannerAdapter { movie, posterView ->
+            findNavController().navigate(
+                DashboardFragmentDirections.actionDashboardScreenToMovieDetailFragment(movie.id),
+                FragmentNavigatorExtras(posterView to "poster_${movie.id}")
+            )
         }
         binding.vpMovieCarousel.adapter = bannerAdapter
         binding.vpMovieCarousel.offscreenPageLimit = 1
@@ -117,9 +121,10 @@ class DashboardFragment : Fragment() {
         adapter.submitList(state.movies)
     }
 
-    private fun createAdapter(): MovieAdapter = MovieAdapter(onItemClick = { movie ->
+    private fun createAdapter(): MovieAdapter = MovieAdapter(onItemClick = { movie, posterView ->
         findNavController().navigate(
-            DashboardFragmentDirections.actionDashboardScreenToMovieDetailFragment(movie.id)
+            DashboardFragmentDirections.actionDashboardScreenToMovieDetailFragment(movie.id),
+            FragmentNavigatorExtras(posterView to "poster_${movie.id}")
         )
     })
 

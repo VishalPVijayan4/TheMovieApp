@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -34,10 +35,13 @@ class MediaCollectionFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.tvTitle.text = if (args.collectionType == "favorite") "Favorites" else "Watchlist"
 
-        movieAdapter = ProfileFavoriteAdapter { movie ->
-            findNavController().navigate(MediaCollectionFragmentDirections.actionMediaCollectionFragmentToMovieDetailFragment(movie.id))
+        movieAdapter = ProfileFavoriteAdapter { movie, posterView ->
+            findNavController().navigate(
+                MediaCollectionFragmentDirections.actionMediaCollectionFragmentToMovieDetailFragment(movie.id),
+                FragmentNavigatorExtras(posterView to "poster_${movie.id}")
+            )
         }
-        tvAdapter = ProfileFavoriteAdapter { tv ->
+        tvAdapter = ProfileFavoriteAdapter { tv, _ ->
             findNavController().navigate(MediaCollectionFragmentDirections.actionMediaCollectionFragmentToTvSeriesDetailFragment(tv.id))
         }
 
