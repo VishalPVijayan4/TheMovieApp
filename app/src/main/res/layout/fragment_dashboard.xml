@@ -23,7 +23,9 @@
                 android:clickable="true"
                 android:focusable="true"
                 app:cardBackgroundColor="@color/prime_card"
-                app:cardCornerRadius="14dp">
+                app:cardCornerRadius="20dp"
+                app:strokeColor="@color/prime_accent"
+                app:strokeWidth="1dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -34,8 +36,8 @@
 
                     <ImageView
                         android:id="@+id/ivAvatar"
-                        android:layout_width="52dp"
-                        android:layout_height="52dp"
+                        android:layout_width="58dp"
+                        android:layout_height="58dp"
                         android:background="@drawable/circle_background"
                         android:contentDescription="Profile"
                         android:padding="6dp"
@@ -52,7 +54,7 @@
                             android:id="@+id/tvDashboardTitle"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Prime Dashboard"
+                            android:text="Prime Dashboard ✦"
                             android:textColor="@color/prime_text"
                             android:textSize="22sp"
                             android:textStyle="bold" />
@@ -71,7 +73,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="2dp"
-                            android:text="What do you wanna watch today?"
+                            android:text="Curated picks waiting for you"
                             android:textColor="@color/prime_text"
                             android:textSize="16sp" />
                     </LinearLayout>
