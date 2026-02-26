@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.GridLayoutManager
@@ -34,12 +35,12 @@ class MovieListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        adapter = MovieGridAdapter { movie ->
+        adapter = MovieGridAdapter { movie, posterView ->
             val isTvCategory = args.category.startsWith("tv_") || args.category.startsWith("genre_tv_")
             if (isTvCategory) {
-                findNavController().navigate(MovieListFragmentDirections.actionMovieListFragmentToTvSeriesDetailFragment(movie.id))
+                findNavController().navigate(MovieListFragmentDirections.actionMovieListFragmentToTvSeriesDetailFragment(movie.id), FragmentNavigatorExtras(posterView to "poster_${movie.id}"))
             } else {
-                findNavController().navigate(MovieListFragmentDirections.actionMovieListFragmentToMovieDetailFragment(movie.id))
+                findNavController().navigate(MovieListFragmentDirections.actionMovieListFragmentToMovieDetailFragment(movie.id), FragmentNavigatorExtras(posterView to "poster_${movie.id}"))
             }
         }
 

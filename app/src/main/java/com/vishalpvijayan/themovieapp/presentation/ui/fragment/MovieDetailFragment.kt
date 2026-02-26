@@ -6,10 +6,16 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.transition.ChangeBounds
+import androidx.transition.ChangeImageTransform
+import androidx.transition.ChangeTransform
+import androidx.transition.TransitionSet
+import androidx.core.view.ViewCompat
 import com.bumptech.glide.Glide
 import com.vishalpvijayan.themovieapp.databinding.FragmentMovieDetailBinding
 import com.vishalpvijayan.themovieapp.presentation.ui.adapter.CreditsAdapter
@@ -38,9 +44,12 @@ class MovieDetailFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        similarAdapter = MovieAdapter(onItemClick = { movie ->
+        sharedElementEnterTransition = TransitionSet().addTransition(ChangeBounds()).addTransition(ChangeTransform()).addTransition(ChangeImageTransform())
+        ViewCompat.setTransitionName(binding.moviePoster, "poster_${args.movieId}")
+
+        similarAdapter = MovieAdapter(onItemClick = { movie, posterView ->
             val action = MovieDetailFragmentDirections.actionMovieDetailFragmentSelf(movie.id)
-            findNavController().navigate(action)
+            findNavController().navigate(action, FragmentNavigatorExtras(posterView to "poster_${movie.id}"))
         })
         binding.rvSimilarMovies.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
         binding.rvSimilarMovies.adapter = similarAdapter

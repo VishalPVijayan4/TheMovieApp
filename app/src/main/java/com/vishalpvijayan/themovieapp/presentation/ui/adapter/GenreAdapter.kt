@@ -20,6 +20,7 @@ class GenreAdapter(
     inner class GenreHolder(private val binding: ItemGenreBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: Genre) {
             binding.tvGenreName.text = item.name
+            binding.ivGenreIcon.setImageResource(GenreIconMapper.iconFor(item.name))
             binding.root.setOnClickListener { onClick(item) }
         }
     }

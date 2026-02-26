@@ -34,7 +34,7 @@ class TvSeriesDetailFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        similarAdapter = MovieAdapter(onItemClick = { tv ->
+        similarAdapter = MovieAdapter(onItemClick = { tv, _ ->
             findNavController().navigate(TvSeriesDetailFragmentDirections.actionTvSeriesDetailFragmentSelf(tv.id))
         })
         binding.rvSimilarTv.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
