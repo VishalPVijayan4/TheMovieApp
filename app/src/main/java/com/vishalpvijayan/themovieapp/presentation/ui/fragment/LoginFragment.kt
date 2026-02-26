@@ -31,6 +31,12 @@ class LoginFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        listOf(binding.tvTitle, binding.tvSubtitle, binding.usernameLayout, binding.passwordLayout, binding.btnLogin, binding.btnSignUp).forEachIndexed { index, viewItem ->
+            viewItem.alpha = 0f
+            viewItem.translationY = 40f
+            viewItem.animate().alpha(1f).translationY(0f).setStartDelay((index * 70).toLong()).setDuration(350).start()
+        }
+
         binding.btnLogin.setOnClickListener {
             val username = binding.etUsername.text?.toString().orEmpty().trim()
             val password = binding.etPassword.text?.toString().orEmpty()
