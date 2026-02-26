@@ -3,22 +3,22 @@
 
     <item
         android:id="@+id/dashboardScreen"
-        android:icon="@drawable/ic_movies"
+        android:icon="@drawable/ic_nav_home"
         android:title="Home" />
 
     <item
         android:id="@+id/genresFragment"
-        android:icon="@drawable/ic_movies"
+        android:icon="@drawable/ic_nav_genres"
         android:title="Genres" />
 
     <item
         android:id="@+id/tvFragment"
-        android:icon="@drawable/ic_movies"
+        android:icon="@drawable/ic_nav_tv"
         android:title="TV" />
 
     <item
         android:id="@+id/searchFragment"
-        android:icon="@drawable/ic_movies"
+        android:icon="@drawable/ic_nav_search"
         android:title="Search" />
 
 </menu>

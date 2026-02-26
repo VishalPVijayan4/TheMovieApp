@@ -17,9 +17,11 @@
             android:padding="12dp">
 
             <ImageView
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:src="@drawable/ic_movies" />
+                android:id="@+id/ivGenreIcon"
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:contentDescription="genre icon"
+                android:src="@drawable/ic_genre_default" />
 
             <TextView
                 android:id="@+id/tvGenreName"
