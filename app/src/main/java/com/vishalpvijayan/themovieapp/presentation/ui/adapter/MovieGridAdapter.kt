@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
@@ -48,6 +49,8 @@ class MovieGridAdapter(
             binding.btnImageRetry.isVisible = false
             Glide.with(binding.root)
                 .load("https://image.tmdb.org/t/p/w500$posterPath")
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .dontAnimate()
                 .listener(object : RequestListener<Drawable> {
                     override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<Drawable>, isFirstResource: Boolean): Boolean {
                         binding.btnImageRetry.isVisible = true

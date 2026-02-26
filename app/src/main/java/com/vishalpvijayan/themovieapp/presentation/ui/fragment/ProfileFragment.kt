@@ -16,7 +16,6 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.vishalpvijayan.themovieapp.databinding.FragmentProfileBinding
-import com.vishalpvijayan.themovieapp.presentation.ui.adapter.BannerAdapter
 import com.vishalpvijayan.themovieapp.presentation.ui.adapter.ProfileFavoriteAdapter
 import com.vishalpvijayan.themovieapp.presentation.viewmodel.AuthViewModel
 import com.vishalpvijayan.themovieapp.presentation.viewmodel.ProfileViewModel
@@ -52,7 +51,7 @@ class ProfileFragment : Fragment() {
         }
 
         tvAdapter = ProfileFavoriteAdapter { tv, _ ->
-            val action = TvFragmentDirections.actionTvFragmentToTvSeriesDetailFragment(tv.id)
+            val action = ProfileFragmentDirections.actionProfileFragmentToTvSeriesDetailFragment(tv.id)
             findNavController().navigate(action)
         }
 

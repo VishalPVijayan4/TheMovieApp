@@ -45,8 +45,7 @@ class TvFragment : Fragment() {
             findNavController().navigate(action)
         }
         binding.vpTvCarousel.adapter = bannerAdapter
-        binding.vpTvCarousel.offscreenPageLimit = 1
-        binding.vpTvCarousel.clipToPadding = true
+        binding.vpTvCarousel.offscreenPageLimit = 2
 
         airingAdapter = createAdapter()
         onAirAdapter = createAdapter()
@@ -58,9 +57,7 @@ class TvFragment : Fragment() {
         setupSection(binding.sectionPopularTv, popularAdapter, "tv_popular")
         setupSection(binding.sectionTopRatedTv, topRatedAdapter, "tv_top_rated")
 
-        viewModel.carouselShows.observe(viewLifecycleOwner) {
-            bannerAdapter.submitList(it)
-        }
+        viewModel.carouselShows.observe(viewLifecycleOwner) { bannerAdapter.submitList(it) }
 
         viewModel.sections.observe(viewLifecycleOwner) { sections ->
             renderSection(binding.sectionAiringToday, airingAdapter, sections["tv_airing_today"])
@@ -72,6 +69,9 @@ class TvFragment : Fragment() {
 
     private fun setupSection(section: LayoutDashboardSectionBinding, adapter: MovieAdapter, category: String) {
         section.rvMovies.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+        section.rvMovies.setHasFixedSize(true)
+        section.rvMovies.itemAnimator = null
+        section.rvMovies.setItemViewCacheSize(14)
         val viewMoreAdapter = ViewMoreAdapter {
             val action = TvFragmentDirections.actionTvFragmentToMovieListFragment(category, section.tvSectionTitle.text.toString())
             findNavController().navigate(action)
@@ -83,12 +83,16 @@ class TvFragment : Fragment() {
     private fun renderSection(section: LayoutDashboardSectionBinding, adapter: MovieAdapter, state: SectionState?) {
         state ?: return
         section.tvSectionTitle.text = state.title
-        section.shimmerContainer.isVisible = state.isLoading
-        section.errorContainer.isVisible = !state.error.isNullOrBlank()
+        val showShimmer = state.isLoading && state.movies.isEmpty()
+        section.shimmerContainer.isVisible = showShimmer
+        section.errorContainer.isVisible = !showShimmer && !state.error.isNullOrBlank() && state.movies.isEmpty()
         section.tvError.text = state.error
-        section.rvMovies.isVisible = !state.isLoading && state.error.isNullOrBlank()
-        if (state.isLoading) section.shimmerContainer.startShimmer() else section.shimmerContainer.stopShimmer()
+        section.rvMovies.isVisible = !showShimmer
+        if (showShimmer) section.shimmerContainer.startShimmer() else section.shimmerContainer.stopShimmer()
         adapter.submitList(state.movies)
+        if (state.movies.isNotEmpty()) {
+            section.rvMovies.post { section.rvMovies.scrollToPosition(0) }
+        }
     }
 
     private fun createAdapter(): MovieAdapter = MovieAdapter(onItemClick = { tv, _ ->
