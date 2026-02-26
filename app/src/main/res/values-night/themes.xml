@@ -1,7 +1,11 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
     <style name="Base.Theme.TheMovieApp" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your dark theme here. -->
-        <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
+        <item name="colorPrimary">@color/prime_accent</item>
+        <item name="colorOnPrimary">@color/prime_text</item>
+        <item name="colorSurface">@color/prime_card</item>
+        <item name="android:colorBackground">@color/prime_background</item>
+        <item name="colorOnSurface">@color/prime_text</item>
+        <item name="android:statusBarColor">@color/prime_background</item>
+        <item name="android:navigationBarColor">@color/prime_background</item>
     </style>
 </resources>

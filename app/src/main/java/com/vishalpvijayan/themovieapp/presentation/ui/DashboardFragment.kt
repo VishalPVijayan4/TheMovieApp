@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -47,12 +48,14 @@ class DashboardFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        bannerAdapter = BannerAdapter { movie ->
-            findNavController().navigate(DashboardFragmentDirections.actionDashboardScreenToMovieDetailFragment(movie.id))
+        bannerAdapter = BannerAdapter { movie, posterView ->
+            findNavController().navigate(
+                DashboardFragmentDirections.actionDashboardScreenToMovieDetailFragment(movie.id),
+                FragmentNavigatorExtras(posterView to "poster_${movie.id}")
+            )
         }
         binding.vpMovieCarousel.adapter = bannerAdapter
-        binding.vpMovieCarousel.offscreenPageLimit = 1
-        binding.vpMovieCarousel.clipToPadding = true
+        binding.vpMovieCarousel.offscreenPageLimit = 2
 
         nowPlayingAdapter = createAdapter()
         popularAdapter = createAdapter()
@@ -74,9 +77,7 @@ class DashboardFragment : Fragment() {
             }
         }
 
-        dashboardViewModel.carouselMovies.observe(viewLifecycleOwner) {
-            bannerAdapter.submitList(it)
-        }
+        dashboardViewModel.carouselMovies.observe(viewLifecycleOwner) { bannerAdapter.submitList(it) }
 
         dashboardViewModel.sections.observe(viewLifecycleOwner) { sections ->
             renderSection(binding.sectionNowPlaying, nowPlayingAdapter, sections["now_playing"])
@@ -96,6 +97,9 @@ class DashboardFragment : Fragment() {
 
     private fun setupSection(section: LayoutDashboardSectionBinding, adapter: MovieAdapter, category: String) {
         section.rvMovies.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+        section.rvMovies.setHasFixedSize(true)
+        section.rvMovies.itemAnimator = null
+        section.rvMovies.setItemViewCacheSize(14)
         val viewMoreAdapter = ViewMoreAdapter {
             val title = section.tvSectionTitle.text.toString()
             findNavController().navigate(
@@ -109,17 +113,22 @@ class DashboardFragment : Fragment() {
     private fun renderSection(section: LayoutDashboardSectionBinding, adapter: MovieAdapter, state: SectionState?) {
         state ?: return
         section.tvSectionTitle.text = state.title
-        section.shimmerContainer.isVisible = state.isLoading
-        section.errorContainer.isVisible = !state.error.isNullOrBlank()
+        val showShimmer = state.isLoading && state.movies.isEmpty()
+        section.shimmerContainer.isVisible = showShimmer
+        section.errorContainer.isVisible = !showShimmer && !state.error.isNullOrBlank() && state.movies.isEmpty()
         section.tvError.text = state.error
-        section.rvMovies.isVisible = !state.isLoading && state.error.isNullOrBlank()
-        if (state.isLoading) section.shimmerContainer.startShimmer() else section.shimmerContainer.stopShimmer()
+        section.rvMovies.isVisible = !showShimmer
+        if (showShimmer) section.shimmerContainer.startShimmer() else section.shimmerContainer.stopShimmer()
         adapter.submitList(state.movies)
+        if (state.movies.isNotEmpty()) {
+            section.rvMovies.post { section.rvMovies.scrollToPosition(0) }
+        }
     }
 
-    private fun createAdapter(): MovieAdapter = MovieAdapter(onItemClick = { movie ->
+    private fun createAdapter(): MovieAdapter = MovieAdapter(onItemClick = { movie, posterView ->
         findNavController().navigate(
-            DashboardFragmentDirections.actionDashboardScreenToMovieDetailFragment(movie.id)
+            DashboardFragmentDirections.actionDashboardScreenToMovieDetailFragment(movie.id),
+            FragmentNavigatorExtras(posterView to "poster_${movie.id}")
         )
     })
 

@@ -2,15 +2,18 @@ package com.vishalpvijayan.themovieapp.presentation.ui.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.ImageView
+import androidx.core.view.ViewCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.vishalpvijayan.themovieapp.data.remote.model.Movie
 import com.vishalpvijayan.themovieapp.databinding.ItemBannerBinding
 
 class BannerAdapter(
-    private val onItemClick: (Movie) -> Unit
+    private val onItemClick: (Movie, ImageView) -> Unit
 ) : ListAdapter<Movie, BannerAdapter.BannerViewHolder>(Diff) {
 
     object Diff : DiffUtil.ItemCallback<Movie>() {
@@ -22,8 +25,11 @@ class BannerAdapter(
         fun bind(item: Movie) {
             binding.tvBannerTitle.text = item.title ?: "Untitled"
             val image = item.backdrop_path ?: item.poster_path
-            Glide.with(binding.root).load("https://image.tmdb.org/t/p/w780$image").into(binding.ivBanner)
-            binding.root.setOnClickListener { onItemClick(item) }
+            ViewCompat.setTransitionName(binding.ivBanner, "poster_${item.id}")
+            Glide.with(binding.root).load("https://image.tmdb.org/t/p/w780$image")
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .dontAnimate().into(binding.ivBanner)
+            binding.root.setOnClickListener { onItemClick(item, binding.ivBanner) }
         }
     }
 

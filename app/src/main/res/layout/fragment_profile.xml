@@ -82,6 +82,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:text="Open Favorites"
+                app:icon="@android:drawable/btn_star_big_on"
+                app:iconPadding="10dp"
                 android:textColor="@color/white"
                 app:backgroundTint="@color/prime_card" />
 
@@ -91,6 +93,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:text="Open Watchlist"
+                app:icon="@android:drawable/ic_menu_recent_history"
+                app:iconPadding="10dp"
                 android:textColor="@color/white"
                 app:backgroundTint="@color/prime_card" />
 
@@ -109,6 +113,8 @@
                 android:layout_marginTop="10dp"
                 android:textColor="@color/white"
                 android:text="About"
+                app:icon="@android:drawable/ic_menu_info_details"
+                app:iconPadding="10dp"
                 app:backgroundTint="@color/prime_card" />
 
             <com.google.android.material.button.MaterialButton
@@ -117,6 +123,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:text="Privacy Policy"
+                app:icon="@android:drawable/ic_secure"
+                app:iconPadding="10dp"
                 android:textColor="@color/white"
                 android:background="@color/prime_card"
                 app:backgroundTint="@color/prime_card" />
@@ -128,6 +136,8 @@
                 android:layout_marginTop="8dp"
                 android:textColor="@color/white"
                 android:text="Contact Developer (LinkedIn)"
+                app:icon="@android:drawable/ic_menu_share"
+                app:iconPadding="10dp"
                 app:backgroundTint="@color/prime_card" />
 
             <com.google.android.material.button.MaterialButton
@@ -137,6 +147,8 @@
                 android:layout_marginTop="16dp"
                 android:textColor="@color/white"
                 android:text="Logout"
+                app:icon="@android:drawable/ic_lock_power_off"
+                app:iconPadding="10dp"
                 app:backgroundTint="@color/prime_accent" />
 
             <TextView
