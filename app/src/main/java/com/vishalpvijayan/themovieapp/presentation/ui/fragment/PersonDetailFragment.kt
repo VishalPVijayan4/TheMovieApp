@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -24,7 +25,11 @@ class PersonDetailFragment : Fragment() {
     private val viewModel: PersonDetailViewModel by viewModels()
     private lateinit var adapter: MovieAdapter
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         _binding = FragmentPersonDetailBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -32,10 +37,13 @@ class PersonDetailFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        adapter = MovieAdapter { movie ->
-            findNavController().navigate(PersonDetailFragmentDirections.actionPersonDetailFragmentToMovieDetailFragment(movie.id))
-        }
-        binding.rvPersonMovies.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+        adapter = MovieAdapter(onItemClick = { movie, posterView ->
+            val action = PersonDetailFragmentDirections.actionPersonDetailFragmentToMovieDetailFragment(movie.id)
+            findNavController().navigate(action, FragmentNavigatorExtras(posterView to "poster_${movie.id}"))
+        })
+
+        binding.rvPersonMovies.layoutManager =
+            LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
         binding.rvPersonMovies.adapter = adapter
 
         viewModel.load(args.personId)
@@ -45,9 +53,15 @@ class PersonDetailFragment : Fragment() {
         viewModel.person.observe(viewLifecycleOwner) { person ->
             person ?: return@observe
             binding.tvPersonName.text = person.name ?: "Unknown"
-            binding.tvPersonMeta.text = listOfNotNull(person.known_for_department, person.birthday, person.place_of_birth).joinToString(" • ")
-            binding.tvPersonBio.text = person.biography?.ifBlank { "No biography available" } ?: "No biography available"
-            Glide.with(this).load("https://image.tmdb.org/t/p/w500${person.profile_path}").into(binding.ivPerson)
+            binding.tvPersonMeta.text = listOfNotNull(
+                person.known_for_department,
+                person.birthday,
+                person.place_of_birth
+            ).joinToString(" • ")
+            binding.tvPersonBio.text =
+                person.biography?.ifBlank { "No biography available" } ?: "No biography available"
+            Glide.with(this).load("https://image.tmdb.org/t/p/w500${person.profile_path}")
+                .into(binding.ivPerson)
         }
 
         viewModel.movies.observe(viewLifecycleOwner) { movies ->
